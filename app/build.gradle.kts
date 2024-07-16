@@ -50,6 +50,11 @@ android {
 }
 
 dependencies {
+    //Network Call
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // JSON to Kotlin object mapping
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // NAVIGATION
         val nav_version = "2.7.7"
@@ -59,6 +64,14 @@ dependencies {
         // Jetpack Compose Integration
         implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    // IMAGES
+        implementation("com.google.accompanist:accompanist-drawablepainter:0.28.0")
+        implementation("io.coil-kt:coil-compose:2.1.0") // load an image from URL
+
+    // ALPHA UI
+        implementation("androidx.compose.ui:ui:1.6.0-alpha08")
+        implementation("androidx.compose.material:material:1.6.0-alpha08")
+        implementation("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
