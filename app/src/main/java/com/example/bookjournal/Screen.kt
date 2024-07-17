@@ -15,4 +15,9 @@ sealed class Screen(val name: String, val route: String) {
         object AccountScreen : BottomBarScreen(name = "Account", route = "account_screen", iconId = R.drawable.ic_account)
     }
 
+    object BookDetailsScreen : Screen(
+        name="Book details",
+        route="book_details_screen"
+    )
+
 }

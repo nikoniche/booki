@@ -1,4 +1,4 @@
-package com.example.bookjournal.api
+package com.example.bookjournal.openLibraryAPI
 
 import OpenLibraryService
 import retrofit2.Retrofit

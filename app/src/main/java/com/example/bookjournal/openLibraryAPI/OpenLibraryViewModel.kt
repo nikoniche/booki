@@ -1,8 +1,6 @@
-package com.example.bookjournal.api
+package com.example.bookjournal.openLibraryAPI
 
 import OpenLibraryResponse
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.bookjournal.books.Book
 import retrofit2.Call
@@ -30,6 +28,7 @@ class OpenLibraryViewModel : ViewModel() {
                                 author = bookData.authors[0].name,
                                 numberOfPages = bookData.number_of_pages,
                                 publishDate = bookData.publish_date,
+                                isbn = bookData.identifiers.isbn_10[0],
                                 coverUrl = bookData.cover.large,
                             )
                             onResult(book)
