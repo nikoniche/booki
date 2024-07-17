@@ -15,7 +15,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainView() {
     val navController: NavHostController = rememberNavController()
-    val navigationManager: NavigationManager = NavigationManager(navController = navController)
+    val navigationManager = NavigationManager(navHostController = navController)
 
     var screenName by remember {
         mutableStateOf("Home")

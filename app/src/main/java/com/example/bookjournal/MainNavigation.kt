@@ -3,9 +3,7 @@ package com.example.bookjournal
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavArgumentBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,21 +14,21 @@ import com.example.bookjournal.bottomBarScreensViews.AddView
 import com.example.bookjournal.bottomBarScreensViews.HomeView
 
 class NavigationManager(
-    private val navController: NavHostController
+    private val navHostController: NavHostController
 ) {
     @Composable
     fun NavigationView(padding: PaddingValues) {
         NavHost(
             modifier = Modifier.padding(padding),
-            navController = navController,
+            navController = navHostController,
             startDestination = Screen.BottomBarScreen.HomeScreen.route)
         {
             // bottom bar screens
             composable(Screen.BottomBarScreen.HomeScreen.route) {
-                HomeView()
+                HomeView(navHostController)
             }
             composable(Screen.BottomBarScreen.AddScreen.route) {
-                AddView(navController=navController)
+                AddView(navController=navHostController)
             }
             composable(Screen.BottomBarScreen.AccountScreen.route) {
                 AccountView()
@@ -48,9 +46,13 @@ class NavigationManager(
                 val bookIsbn: String? = if(entry.arguments != null) entry.arguments!!.getString("bookIsbn") else ""
                 BookDetails(bookIsbn = bookIsbn?: "")
             }
+
+            composable(Screen.PersonalBooksScreen.route) {
+                PersonalBooksView()
+            }
         }
     }
     fun NavigateToScreen(screen: Screen) {
-        navController.navigate(screen.route)
+        navHostController.navigate(screen.route)
     }
 }

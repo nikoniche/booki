@@ -1,9 +1,5 @@
 package com.example.bookjournal
 
-import android.graphics.drawable.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-
 sealed class Screen(val name: String, val route: String) {
 
     object ListOfScreens {
@@ -18,6 +14,11 @@ sealed class Screen(val name: String, val route: String) {
     object BookDetailsScreen : Screen(
         name="Book details",
         route="book_details_screen"
+    )
+
+    object PersonalBooksScreen : Screen(
+        name="Personal books",
+        route="personal_books_screen"
     )
 
 }
