@@ -50,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.books.Book
 import com.example.booki.books.PersonalBook
+import com.example.booki.books.Status
 import com.example.booki.books.dummyPersonalBook
 import com.example.booki.openLibraryAPI.OpenLibraryViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
@@ -70,7 +71,6 @@ fun BookDetails(bookIsbn: String) {
 
     if (!loading) {
         val loadedBook: Book = foundBook ?: Book()
-        println("entered isbn: $bookIsbn")
         BookView(loadedBook)
     } else {
         /*Row(
@@ -150,7 +150,7 @@ fun BookView(book: Book) {
                     mutableStateOf(false)
                 }
                 var bookStatusState by remember {
-                    mutableStateOf(personalBook?.status ?: "Not read")
+                    mutableStateOf(personalBook?.status ?: Status.NotRead)
                 }
 
                 Button(
@@ -172,7 +172,7 @@ fun BookView(book: Book) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text=bookStatusState,
+                            text=bookStatusState.inText,
                         )
                         Icon(Icons.Default.KeyboardArrowDown, null)
                     }
@@ -184,10 +184,10 @@ fun BookView(book: Book) {
                             dropDownMenuExpandedState = false
                         }) {
                         @Composable
-                        fun BookStatusSelection(status: String) {
+                        fun BookStatusSelection(status: Status) {
                             DropdownMenuItem(
                                 text = {
-                                    Text(status)
+                                    Text(status.inText, color=status.color)
                                 },
                                 onClick = {
                                     bookStatusState = status
@@ -195,10 +195,10 @@ fun BookView(book: Book) {
                                 }
                             )
                         }
-                        BookStatusSelection(status = "Not read")
-                        BookStatusSelection(status = "Reading")
-                        BookStatusSelection(status = "Finished")
-                        BookStatusSelection(status = "Dropped")
+                        BookStatusSelection(Status.NotRead)
+                        BookStatusSelection(Status.Reading)
+                        BookStatusSelection(Status.Finished)
+                        BookStatusSelection(Status.Dropped)
                     }
                 }
 

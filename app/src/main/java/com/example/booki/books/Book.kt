@@ -1,5 +1,7 @@
 package com.example.booki.books
 
+import androidx.compose.ui.graphics.Color
+
 data class Book(
     val title: String="Unknown",
     val author: String="Anonymous",
@@ -12,11 +14,21 @@ data class Book(
 
 data class PersonalBook(
     val book: Book,
-    val status: String="Not read",
+    val status: Status=Status.NotRead,
     val readPages: Int=0,
     val rating: Int=1, // 1-10 / 2 na 5 hvezdicek
     val comment: String="",
 )
+
+sealed class Status(
+    val inText: String,
+    val color: Color,
+) {
+    data object NotRead : Status("Not read", Color.Gray)
+    data object Reading : Status("Reading", Color.Yellow)
+    data object Finished : Status("Finished", Color.Green)
+    data object Dropped : Status("Dropped", Color.Red)
+}
 
 val dummyBook: Book = Book(
     title="Dummy book",
@@ -29,10 +41,10 @@ val dummyBook: Book = Book(
 
 val dummyPersonalBook: PersonalBook = PersonalBook(
     book=dummyBook,
-    status="Reading",
+    status=Status.NotRead,
     readPages=122,
     rating=7,
     comment="was alright",
 )
 
-val dummyPersonalBooks = listOf(dummyPersonalBook, dummyPersonalBook.copy(status="Finished"), dummyPersonalBook.copy(status="Not read"), dummyPersonalBook.copy(status="Dropped"), dummyPersonalBook, dummyPersonalBook, dummyPersonalBook)
+val dummyPersonalBooks = listOf(dummyPersonalBook, dummyPersonalBook.copy(status=Status.Finished), dummyPersonalBook.copy(), dummyPersonalBook.copy(status=Status.Dropped), dummyPersonalBook, dummyPersonalBook, dummyPersonalBook)

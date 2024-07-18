@@ -104,18 +104,9 @@ fun PersonalBookCard(
 
             if(showReadingStatus) {
                 Spacer(Modifier.height(textSpacerHeight))
-                val statusColor = when(personalBook.status) {
-                    "Reading" -> Color.Yellow
-                    "Finished" -> Color.Green
-                    "Dropped" -> Color.Red
-                    "Not read" -> Color.DarkGray
-                    else -> {
-                        Color.Transparent
-                    }
-                }
                 Text(
-                    text=personalBook.status,
-                    color=statusColor,
+                    text=personalBook.status.inText,
+                    color=personalBook.status.color,
                 )
             }
 

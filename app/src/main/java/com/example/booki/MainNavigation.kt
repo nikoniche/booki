@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.example.booki.bottomBarScreensViews.AccountView
 import com.example.booki.bottomBarScreensViews.AddView
 import com.example.booki.bottomBarScreensViews.HomeView
+import com.example.booki.personalData.PersonalBooksView
 
 class NavigationManager(
     private val navHostController: NavHostController

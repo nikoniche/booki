@@ -33,6 +33,7 @@ import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.PersonalBookCard
 import com.example.booki.Screen
+import com.example.booki.books.PersonalBook
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
@@ -80,15 +81,23 @@ fun HomeView(navHostController: NavHostController) {
             }
         }
         Spacer(Modifier.height(8.dp))
-        LazyRow {
-            items(PersonalRecordsViewModel.getBooks()) {
-                personalBook ->
-                PersonalBookCard(
-                    personalBook,
-                    showPageProgress = true,
-                    showReadingStatus = true,
-                )
+
+        val books: List<PersonalBook> = PersonalRecordsViewModel.getBooks()
+        if (books.isNotEmpty()) {
+            LazyRow {
+                items(books) {
+                        personalBook ->
+                    PersonalBookCard(
+                        personalBook,
+                        showPageProgress = true,
+                        showReadingStatus = true,
+                    )
+                }
             }
+        } else {
+            Text(
+                text="You have no books saved."
+            )
         }
     }
 }
