@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 import org.junit.Test
 

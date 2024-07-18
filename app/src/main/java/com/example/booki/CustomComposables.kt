@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -29,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bookjournal.books.PersonalBook
-import com.example.bookjournal.books.dummyPersonalBook
+import com.example.booki.books.PersonalBook
+import com.example.booki.books.dummyPersonalBook
 
 @Composable
 fun MyHeadline(
@@ -131,41 +130,43 @@ fun PersonalBookCard(
 
             if (showRating) {
                 Spacer(Modifier.height(textSpacerHeight))
-                val amountOfFullStars: Int = personalBook.rating.div(2)
-                val halfStar: Int = personalBook.rating.mod(2)
-                
-                Row(
-
-                ) {
-                    val starSize: Dp = 16.dp
-                    for (i in 0 until amountOfFullStars) {
-                        Icon(
-                            painter= painterResource(id = R.drawable.star),
-                            contentDescription ="full star",
-                            tint=Color.Unspecified,
-                            modifier = Modifier.size(starSize)
-                        )
-                    }
-
-                    if (halfStar == 1) {
-                        Icon(
-                            painter= painterResource(id = R.drawable.half_star),
-                            contentDescription ="half star",
-                            tint=Color.Unspecified,
-                            modifier = Modifier.size(starSize)
-                        )
-                    }
-
-                    for (i in 0 until 5-amountOfFullStars-halfStar) {
-                        Icon(
-                            painter= painterResource(id = R.drawable.empty_star),
-                            contentDescription ="empty star",
-                            tint=Color.Unspecified,
-                            modifier = Modifier.size(starSize)
-                        )
-                    }
-                }
+                StarRating(personalBook, 16.dp)
             }
+        }
+    }
+}
+
+@Composable
+fun StarRating(personalBook: PersonalBook, starSize: Dp=16.dp) {
+    val amountOfFullStars: Int = personalBook.rating.div(2)
+    val halfStar: Int = personalBook.rating.mod(2)
+
+    Row {
+        for (i in 0 until amountOfFullStars) {
+            Icon(
+                painter= painterResource(id = R.drawable.star),
+                contentDescription ="full star",
+                tint=Color.Unspecified,
+                modifier = Modifier.size(starSize)
+            )
+        }
+
+        if (halfStar == 1) {
+            Icon(
+                painter= painterResource(id = R.drawable.half_star),
+                contentDescription ="half star",
+                tint=Color.Unspecified,
+                modifier = Modifier.size(starSize)
+            )
+        }
+
+        for (i in 0 until 5-amountOfFullStars-halfStar) {
+            Icon(
+                painter= painterResource(id = R.drawable.empty_star),
+                contentDescription ="empty star",
+                tint=Color.Unspecified,
+                modifier = Modifier.size(starSize)
+            )
         }
     }
 }

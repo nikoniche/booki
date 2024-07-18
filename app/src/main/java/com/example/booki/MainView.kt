@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bookjournal"
+    namespace = "com.example.booki"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.bookjournal"
+        applicationId = "com.example.booki"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

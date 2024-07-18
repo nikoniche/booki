@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -9,9 +9,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.bookjournal.bottomBarScreensViews.AccountView
-import com.example.bookjournal.bottomBarScreensViews.AddView
-import com.example.bookjournal.bottomBarScreensViews.HomeView
+import com.example.booki.bottomBarScreensViews.AccountView
+import com.example.booki.bottomBarScreensViews.AddView
+import com.example.booki.bottomBarScreensViews.HomeView
 
 class NavigationManager(
     private val navHostController: NavHostController
@@ -21,7 +21,7 @@ class NavigationManager(
         NavHost(
             modifier = Modifier.padding(padding),
             navController = navHostController,
-            startDestination = Screen.BottomBarScreen.HomeScreen.route)
+            startDestination = Screen.BottomBarScreen.AddScreen.route)
         {
             // bottom bar screens
             composable(Screen.BottomBarScreen.HomeScreen.route) {

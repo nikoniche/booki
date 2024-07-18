@@ -1,6 +1,4 @@
-package com.example.bookjournal.books
-
-import com.example.bookjournal.R
+package com.example.booki.books
 
 data class Book(
     val title: String="Unknown",
@@ -25,7 +23,7 @@ val dummyBook: Book = Book(
     author="Dummy author",
     numberOfPages = 129,
     publishDate = "1.3.2034",
-    isbn="945164846542",
+    isbn="0141023996", // strictly isbn-10 (cause its fetched by the API)
     description = "no description :(",
 )
 

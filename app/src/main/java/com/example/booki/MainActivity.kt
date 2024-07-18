@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.bookjournal.ui.theme.BookJournalTheme
+import com.example.booki.ui.theme.BookiTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContent {
-            BookJournalTheme(darkTheme = false) {
+            BookiTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground=true)
 @Composable
 fun MainActivityPreview() {
-    BookJournalTheme {
+    BookiTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),

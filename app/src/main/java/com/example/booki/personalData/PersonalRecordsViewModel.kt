@@ -1,8 +1,9 @@
-package com.example.bookjournal.personalData
+package com.example.booki.personalData
 
 import androidx.lifecycle.ViewModel
-import com.example.bookjournal.books.PersonalBook
-import com.example.bookjournal.books.dummyPersonalBook
+import com.example.booki.books.Book
+import com.example.booki.books.PersonalBook
+import com.example.booki.books.dummyPersonalBook
 
 object PersonalRecordsViewModel: ViewModel() {
     private val books: MutableList<PersonalBook> = mutableListOf(
@@ -41,5 +42,13 @@ object PersonalRecordsViewModel: ViewModel() {
             }
             matchingBooks
         }
+    }
+
+    fun getPersonalRecordsForGeneralBook(book: Book): PersonalBook? {
+        books.forEach {
+            personalBook ->
+            if (personalBook.book.equals(book)) return personalBook
+        }
+        return null
     }
 }

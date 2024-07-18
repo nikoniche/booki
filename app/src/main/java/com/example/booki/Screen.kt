@@ -1,4 +1,4 @@
-package com.example.bookjournal
+package com.example.booki
 
 sealed class Screen(val name: String, val route: String) {
 

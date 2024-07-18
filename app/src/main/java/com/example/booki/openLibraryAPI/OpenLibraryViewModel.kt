@@ -1,8 +1,8 @@
-package com.example.bookjournal.openLibraryAPI
+package com.example.booki.openLibraryAPI
 
 import OpenLibraryResponse
 import androidx.lifecycle.ViewModel
-import com.example.bookjournal.books.Book
+import com.example.booki.books.Book
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

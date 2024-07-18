@@ -1,4 +1,4 @@
-package com.example.bookjournal.bottomBarScreensViews
+package com.example.booki.bottomBarScreensViews
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -28,12 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.bookjournal.MyAppColumn
-import com.example.bookjournal.MyDivider
-import com.example.bookjournal.MyHeadline
-import com.example.bookjournal.PersonalBookCard
-import com.example.bookjournal.Screen
-import com.example.bookjournal.personalData.PersonalRecordsViewModel
+import com.example.booki.MyAppColumn
+import com.example.booki.MyDivider
+import com.example.booki.MyHeadline
+import com.example.booki.PersonalBookCard
+import com.example.booki.Screen
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun HomeView(navHostController: NavHostController) {
