@@ -16,15 +16,13 @@ class OpenLibraryViewModel : ViewModel() {
             override fun onResponse(call: Call<OpenLibraryResponse>, response: Response<OpenLibraryResponse>) {
                 if (response.isSuccessful) {
                     val post = response.body()
+
                     println("Book was found.")
+
                     if (post != null) {
                         post.records.entries.forEach {
                             entry ->
                             val bookData = entry.value.data
-                            val book: Book
-                            println(bookData.identifiers)
-
-
 
                             lateinit var isbn10: String
                             if (bookData.identifiers.isbn_10 != null) {
@@ -42,10 +40,10 @@ class OpenLibraryViewModel : ViewModel() {
                             if (bookData.cover != null) {
                                 coverUrl = bookData.cover.large
                             } else {
-                                coverUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Ferror-404_2034479&psig=AOvVaw2yyjqkFKmQtKhiRloV4gk8&ust=1721484791462000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPDljOaks4cDFQAAAAAdAAAAABAJ"
+                                coverUrl = "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
                             }
 
-                            book = Book(
+                            val book = Book(
                                 title = bookData.title,
                                 author = bookData.authors[0].name,
                                 numberOfPages = bookData.number_of_pages,
@@ -60,7 +58,7 @@ class OpenLibraryViewModel : ViewModel() {
                     }
                     // Handle the retrieved post data
                 } else {
-                    println("Failed")
+                    println("Book not found")
                     // Handle error
                     try {
                         val errorBody = response.errorBody()?.string()
@@ -68,6 +66,7 @@ class OpenLibraryViewModel : ViewModel() {
                         println("Error Message: ${errorBody}")
                     } catch (e: IOException) {
                         e.printStackTrace()
+                    } finally {
                         onResult(null)
                     }
                 }
@@ -75,6 +74,7 @@ class OpenLibraryViewModel : ViewModel() {
 
             override fun onFailure(call: Call<OpenLibraryResponse>, t: Throwable) {
                 println("Handling failure")
+                println(t.cause)
                 println(t.message)
                 onResult(null)
                 // Handle failure

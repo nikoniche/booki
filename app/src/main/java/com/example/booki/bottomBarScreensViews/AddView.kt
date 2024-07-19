@@ -72,7 +72,7 @@ fun AddView(navController: NavHostController) {
     val openLibraryViewModel: OpenLibraryViewModel = viewModel()
 
     var enteredISBN by remember {
-        mutableStateOf("")
+        mutableStateOf("9781785042188")
     }
 
     var searchingStatus by remember { mutableStateOf(false) }

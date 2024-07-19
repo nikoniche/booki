@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -72,6 +73,12 @@ dependencies {
         implementation("androidx.compose.ui:ui:1.6.0-alpha08")
         implementation("androidx.compose.material:material:1.6.0-alpha08")
         implementation("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
+
+    // ROOM LOCAL DATABASE
+    val room = "2.6.0"
+    implementation("androidx.room:room-runtime:$room")
+    implementation("androidx.room:room-ktx:$room")
+    kapt("androidx.room:room-compiler:$room")
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")

@@ -27,17 +27,28 @@ data class PersonalBook(
     var status: Status=Status.PlanToRead,
     val readPages: Int=0,
     val rating: Int=1, // 1-10 / 2 na 5 hvezdicek
-    val comment: String="",
+    val review: String="",
 )
 
 sealed class Status(
+    val id: Int,
     val inText: String,
     val color: Color,
 ) {
-    data object PlanToRead : Status("Plan to read", Color.Gray)
-    data object Reading : Status("Reading", Color.Yellow)
-    data object Finished : Status("Finished", Color.Green)
-    data object Dropped : Status("Dropped", Color.Red)
+    private val allStatuses: List<Status> = listOf(PlanToRead, Reading, Finished, Dropped)
+
+    fun getStatusById(statusId: Int): Status {
+        allStatuses.forEach {
+            if (it.id == statusId) {
+                return it
+            }
+        }
+        return PlanToRead // default, will never trigger
+    }
+    data object PlanToRead : Status(id=0, "Plan to read", Color.Gray)
+    data object Reading : Status(id=1, "Reading", Color.Yellow)
+    data object Finished : Status(id=2, "Finished", Color.Green)
+    data object Dropped : Status(id=3, "Dropped", Color.Red)
 }
 
 val dummyBook: Book = Book(
@@ -54,7 +65,7 @@ val dummyPersonalBook: PersonalBook = PersonalBook(
     status=Status.PlanToRead,
     readPages=122,
     rating=7,
-    comment="was alright",
+    review="was alright",
 )
 
 val dummyPersonalBooks = listOf(dummyPersonalBook, dummyPersonalBook.copy(status=Status.Finished), dummyPersonalBook.copy(), dummyPersonalBook.copy(status=Status.Dropped), dummyPersonalBook, dummyPersonalBook, dummyPersonalBook)

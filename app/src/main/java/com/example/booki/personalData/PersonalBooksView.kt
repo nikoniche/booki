@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.booki.MyAppColumn
@@ -22,38 +23,61 @@ import com.example.booki.books.PersonalBook
 import com.example.booki.books.Status
 
 @Composable
-fun PersonalBooksView(navHostController: NavHostController) {
+fun PersonalBooksView(
+    navHostController: NavHostController,
+    personalRecordsViewModel: PersonalRecordsViewModel
+) {
     MyAppColumn(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        RowOfBooks(status = Status.Reading, navHostController=navHostController)
+        RowOfBooks(
+            status = Status.Reading,
+            navHostController=navHostController,
+            personalRecordsViewModel=personalRecordsViewModel,
+        )
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.Finished, navHostController=navHostController)
+        RowOfBooks(
+            status = Status.Finished,
+            navHostController=navHostController,
+            personalRecordsViewModel=personalRecordsViewModel,
+        )
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.PlanToRead, navHostController=navHostController)
+        RowOfBooks(
+            status = Status.PlanToRead,
+            navHostController=navHostController,
+            personalRecordsViewModel=personalRecordsViewModel,
+        )
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.Dropped, navHostController=navHostController)
+        RowOfBooks(
+            status = Status.Dropped,
+            navHostController=navHostController,
+            personalRecordsViewModel=personalRecordsViewModel,
+        )
     }
 }
 
 @Composable
-fun RowOfBooks(status: Status, navHostController: NavHostController) {
+fun RowOfBooks(
+    status: Status,
+    navHostController: NavHostController,
+    personalRecordsViewModel: PersonalRecordsViewModel,
+) {
     MyHeadline(text = status.inText)
     Spacer(Modifier.height(8.dp))
 
-    val books: List<PersonalBook> = PersonalRecordsViewModel.getBooks(status)
+    val books: List<PersonalBook> = personalRecordsViewModel.getBooks(status)
     if (books.isNotEmpty()) {
         LazyRow {
             items(books) {
@@ -91,5 +115,5 @@ fun RowOfBooks(status: Status, navHostController: NavHostController) {
 @Preview(showBackground=true)
 @Composable
 fun PersonalBooksViewPreview() {
-    PersonalBooksView(rememberNavController())
+    PersonalBooksView(rememberNavController(), viewModel())
 }

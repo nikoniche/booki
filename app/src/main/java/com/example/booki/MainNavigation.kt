@@ -13,20 +13,25 @@ import com.example.booki.bottomBarScreensViews.AccountView
 import com.example.booki.bottomBarScreensViews.AddView
 import com.example.booki.bottomBarScreensViews.HomeView
 import com.example.booki.personalData.PersonalBooksView
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 class NavigationManager(
-    private val navHostController: NavHostController
+    private val navHostController: NavHostController,
+    private val personalRecordsViewModel: PersonalRecordsViewModel,
 ) {
     @Composable
     fun NavigationView(padding: PaddingValues) {
         NavHost(
             modifier = Modifier.padding(padding),
             navController = navHostController,
-            startDestination = Screen.BottomBarScreen.AddScreen.route)
+            startDestination = Screen.BottomBarScreen.HomeScreen.route)
         {
             // bottom bar screens
             composable(Screen.BottomBarScreen.HomeScreen.route) {
-                HomeView(navHostController)
+                HomeView(
+                    navHostController=navHostController,
+                    personalRecordsViewModel=personalRecordsViewModel,
+                )
             }
             composable(Screen.BottomBarScreen.AddScreen.route) {
                 AddView(navController=navHostController)
@@ -45,11 +50,17 @@ class NavigationManager(
             ) {
                 entry ->
                 val bookIsbn: String? = if(entry.arguments != null) entry.arguments!!.getString("bookIsbn") else ""
-                BookDetails(bookIsbn = bookIsbn?: "")
+                BookDetails(
+                    bookIsbn = bookIsbn?: "",
+                    personalRecordsViewModel=personalRecordsViewModel
+                )
             }
 
             composable(Screen.PersonalBooksScreen.route) {
-                PersonalBooksView(navHostController=navHostController)
+                PersonalBooksView(
+                    navHostController=navHostController,
+                    personalRecordsViewModel=personalRecordsViewModel,
+                )
             }
         }
     }

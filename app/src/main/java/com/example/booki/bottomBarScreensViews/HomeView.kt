@@ -37,7 +37,7 @@ import com.example.booki.books.PersonalBook
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
-fun HomeView(navHostController: NavHostController) {
+fun HomeView(navHostController: NavHostController, personalRecordsViewModel: PersonalRecordsViewModel) {
     MyAppColumn {
         ReadInLast("Books read this year", 27)
         Spacer(Modifier.height(6.dp))
@@ -82,7 +82,7 @@ fun HomeView(navHostController: NavHostController) {
         }
         Spacer(Modifier.height(8.dp))
 
-        val books: List<PersonalBook> = PersonalRecordsViewModel.getBooks()
+        val books: List<PersonalBook> = personalRecordsViewModel.getBooks()
         if (books.isNotEmpty()) {
             LazyRow {
                 items(books) {

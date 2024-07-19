@@ -50,22 +50,38 @@ import com.example.booki.openLibraryAPI.OpenLibraryViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
-fun BookDetails(bookIsbn: String) {
+fun BookDetails(
+    bookIsbn: String,
+    personalRecordsViewModel: PersonalRecordsViewModel,
+) {
     val openLibraryViewModel: OpenLibraryViewModel = viewModel()
-    var loading by remember { mutableStateOf(true) }
+
+    var searched: Boolean by remember {
+        mutableStateOf(false)
+    }
+    var loading by remember {
+        mutableStateOf(true)
+    }
     var foundBook by remember {
         mutableStateOf<Book?>(null)
     }
 
-    openLibraryViewModel.getBookByISBN(bookIsbn) {
-        book ->
-        foundBook = book
-        loading = false
+    if (!searched) {
+        openLibraryViewModel.getBookByISBN(bookIsbn) {
+            book ->
+            println("book search finished")
+            foundBook = book
+            searched = true
+            loading = false
+        }
     }
 
-    if (!loading) {
-        val loadedBook: Book = foundBook ?: Book()
-        BookView(loadedBook)
+    if (foundBook != null) {
+        val loadedBook: Book = foundBook as Book
+        BookView(
+            book=loadedBook,
+            personalRecordsViewModel=personalRecordsViewModel,
+        )
     } else {
         /*Row(
             modifier = Modifier.fillMaxSize(),
@@ -78,7 +94,10 @@ fun BookDetails(bookIsbn: String) {
 }
 
 @Composable
-fun BookView(book: Book) {
+fun BookView(
+    book: Book,
+    personalRecordsViewModel: PersonalRecordsViewModel,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -131,7 +150,7 @@ fun BookView(book: Book) {
             modifier = Modifier.fillMaxSize()
         )
         {
-            val personalBook: PersonalBook? = PersonalRecordsViewModel.getPersonalRecordsForGeneralBook(book)
+            val personalBook: PersonalBook? = personalRecordsViewModel.getPersonalBookByBook(book)
 
             var bookStatusState by remember {
                 mutableStateOf(personalBook?.status) // null status state means
@@ -189,7 +208,7 @@ fun BookView(book: Book) {
                                 onClick = {
                                     bookStatusState = status
                                     dropDownMenuExpandedState = false
-                                    PersonalRecordsViewModel.changeBookStatus(book, status)
+                                    personalRecordsViewModel.changeBookStatus(book, status)
                                 }
                             )
                         }
@@ -215,7 +234,7 @@ fun BookView(book: Book) {
                 if(bookStatusState != null) {
                     IconButton(
                         onClick={
-                            PersonalRecordsViewModel.removeBook(personalBook as PersonalBook)
+                            personalRecordsViewModel.removeBook(personalBook as PersonalBook)
                             bookStatusState = null
                         }
                     ) {
@@ -229,7 +248,9 @@ fun BookView(book: Book) {
                 Spacer(Modifier.height(12.dp))
                 MyHeadline(text = "Review")
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
                     label = { Text("Review") },
                     placeholder = { Text("no review written") },
                     colors = OutlinedTextFieldDefaults.colors(
@@ -250,7 +271,9 @@ fun BookView(book: Book) {
                 Spacer(Modifier.height(12.dp))
                 MyHeadline(text = "Book notes")
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().height(200.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
                     label={Text("Book notes")},
                     colors=OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.White,
@@ -267,14 +290,4 @@ fun BookView(book: Book) {
             }
         }
     }
-}
-
-@Preview(showBackground=true)
-@Composable
-fun BookViewPreview() {
-    BookView(book = Book(
-        title="Testing title",
-        author="FirstName Surname",
-        numberOfPages = 100,
-    ))
 }
