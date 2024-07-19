@@ -49,7 +49,7 @@ class NavigationManager(
             }
 
             composable(Screen.PersonalBooksScreen.route) {
-                PersonalBooksView()
+                PersonalBooksView(navHostController=navHostController)
             }
         }
     }

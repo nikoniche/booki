@@ -2,6 +2,7 @@ package com.example.booki
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -28,6 +29,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.booki.books.PersonalBook
 import com.example.booki.books.dummyPersonalBook
 
@@ -65,12 +69,16 @@ fun PersonalBookCard(
     showPageProgress: Boolean=false,
     showReadingStatus: Boolean=false,
     showRating: Boolean=false,
+    navHostController: NavHostController, // for quick accessing book details
 )
 {
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(end = 9.dp),
+            .padding(end = 9.dp)
+            .clickable {
+                navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/${personalBook.book.getISBN()}")
+            },
         elevation = 4.dp,
         border= BorderStroke(2.5.dp, Color.Black),
     ) {
@@ -82,7 +90,7 @@ fun PersonalBookCard(
                 .padding(horizontal = 6.dp, vertical = 10.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.nineteen_eighty_four),
+                painter = rememberAsyncImagePainter(model = personalBook.book.coverUrl),
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
@@ -165,5 +173,5 @@ fun StarRating(personalBook: PersonalBook, starSize: Dp=16.dp) {
 @Preview(showBackground=true)
 @Composable
 fun PersonalBookCardPreview() {
-    PersonalBookCard(personalBook = dummyPersonalBook, showRating = true)
+    PersonalBookCard(personalBook = dummyPersonalBook, showRating = true, navHostController = rememberNavController())
 }

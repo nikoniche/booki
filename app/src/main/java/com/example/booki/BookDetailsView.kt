@@ -7,28 +7,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,10 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,7 +46,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.booki.books.Book
 import com.example.booki.books.PersonalBook
 import com.example.booki.books.Status
-import com.example.booki.books.dummyPersonalBook
 import com.example.booki.openLibraryAPI.OpenLibraryViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
@@ -98,8 +92,8 @@ fun BookView(book: Book) {
                 .wrapContentHeight(),
         ) {
             Image(
-                //painter = rememberAsyncImagePainter(model = book.coverUrl),
-                painter=painterResource(R.drawable.nineteen_eighty_four),
+                painter = rememberAsyncImagePainter(model = book.coverUrl),
+//                painter=painterResource(R.drawable.nineteen_eighty_four),
                 contentDescription = "book cover",
                 contentScale = ContentScale.Fit,
                 alignment = AbsoluteAlignment.CenterLeft,
@@ -111,7 +105,7 @@ fun BookView(book: Book) {
 
             Column {
                 Text(
-                    text = "What a really long title i should somehow handle this",
+                    text =book.title,
                     fontWeight=FontWeight.Bold,
                     fontSize = 21.sp,
                 )
@@ -123,7 +117,7 @@ fun BookView(book: Book) {
                 Text(
                     text="${book.numberOfPages} pages\n" +
                             "published: ${book.publishDate}\n" +
-                            "ISBN-10: ${book.isbn}",
+                            "ISBN: ${book.getISBN() ?: "missing isbn"}",
                     fontSize=13.sp,
                     color= Color.Gray
                 )
@@ -137,8 +131,12 @@ fun BookView(book: Book) {
             modifier = Modifier.fillMaxSize()
         )
         {
-            var personalBook: PersonalBook? = PersonalRecordsViewModel.getPersonalRecordsForGeneralBook(book)
-            val hasBookLogged: Boolean = personalBook != null
+            val personalBook: PersonalBook? = PersonalRecordsViewModel.getPersonalRecordsForGeneralBook(book)
+
+            var bookStatusState by remember {
+                mutableStateOf(personalBook?.status) // null status state means
+                // that its not added to users personal books
+            }
 
             Row(
                 modifier = Modifier
@@ -149,9 +147,7 @@ fun BookView(book: Book) {
                 var dropDownMenuExpandedState by remember {
                     mutableStateOf(false)
                 }
-                var bookStatusState by remember {
-                    mutableStateOf(personalBook?.status ?: Status.NotRead)
-                }
+
 
                 Button(
                     onClick = {
@@ -172,7 +168,8 @@ fun BookView(book: Book) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text=bookStatusState.inText,
+                            text=bookStatusState?.inText ?: "Not read",
+                            color=bookStatusState?.color ?: Color.Black,
                         )
                         Icon(Icons.Default.KeyboardArrowDown, null)
                     }
@@ -192,39 +189,53 @@ fun BookView(book: Book) {
                                 onClick = {
                                     bookStatusState = status
                                     dropDownMenuExpandedState = false
+                                    PersonalRecordsViewModel.changeBookStatus(book, status)
                                 }
                             )
                         }
-                        BookStatusSelection(Status.NotRead)
+                        BookStatusSelection(Status.PlanToRead)
                         BookStatusSelection(Status.Reading)
                         BookStatusSelection(Status.Finished)
                         BookStatusSelection(Status.Dropped)
                     }
                 }
 
-                if(hasBookLogged) {
+                if(bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                     personalBook as PersonalBook
                     Text(
                         text = "${personalBook.readPages}/${personalBook.book.numberOfPages}",
                         color = Color.Black,
                         fontSize = 16.sp
                     )
-                    StarRating(personalBook = personalBook, starSize = 25.dp)
+                    if(bookStatusState != Status.Reading) {
+                        StarRating(personalBook = personalBook, starSize = 25.dp)
+                    }
+                }
+
+                if(bookStatusState != null) {
+                    IconButton(
+                        onClick={
+                            PersonalRecordsViewModel.removeBook(personalBook as PersonalBook)
+                            bookStatusState = null
+                        }
+                    ) {
+                        Icon(Icons.Default.Delete, "delete button")
+                    }
                 }
             }
 
-            if(hasBookLogged) {
+            if(bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                 personalBook as PersonalBook
                 Spacer(Modifier.height(12.dp))
                 MyHeadline(text = "Review")
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth().height(100.dp),
-                    label={Text("Review")},
-                    placeholder={Text("no review written")},
-                    colors=OutlinedTextFieldDefaults.colors(
+                    label = { Text("Review") },
+                    placeholder = { Text("no review written") },
+                    colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.White,
                         focusedTextColor = Color.Black,
-                        unfocusedTextColor=Color.Black,
+                        unfocusedTextColor = Color.Black,
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         unfocusedLabelColor = Color.Black,
@@ -233,7 +244,9 @@ fun BookView(book: Book) {
                     value = "",
                     onValueChange = {}
                 )
+            }
 
+            if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
                 Spacer(Modifier.height(12.dp))
                 MyHeadline(text = "Book notes")
                 OutlinedTextField(
@@ -253,7 +266,6 @@ fun BookView(book: Book) {
                 )
             }
         }
-
     }
 }
 

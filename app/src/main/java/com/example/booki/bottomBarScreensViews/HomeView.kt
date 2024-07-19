@@ -91,6 +91,7 @@ fun HomeView(navHostController: NavHostController) {
                         personalBook,
                         showPageProgress = true,
                         showReadingStatus = true,
+                        navHostController=navHostController,
                     )
                 }
             }

@@ -8,24 +8,37 @@ import com.example.booki.books.dummyPersonalBook
 
 object PersonalRecordsViewModel: ViewModel() {
     private val books: MutableList<PersonalBook> = mutableListOf(
-          dummyPersonalBook.copy(status= Status.Reading, rating=10),
-          dummyPersonalBook.copy(status=Status.Dropped),
-          dummyPersonalBook.copy(status=Status.Finished),
-          dummyPersonalBook.copy(status=Status.Finished),
-          dummyPersonalBook,
-          dummyPersonalBook,
     )
-
-    fun addBook(
-        personalBook: PersonalBook
-    ) {
-        books.add(personalBook)
-    }
 
     fun removeBook(
         personalBook: PersonalBook
     ) {
         books.remove(personalBook)
+    }
+
+    fun getPersonalBookByBook(book: Book): PersonalBook? {
+        books.forEach {
+            personalBook ->
+            if (personalBook.book == book) {
+                return personalBook
+            }
+        }
+        return null
+    }
+    fun changeBookStatus(book: Book, status: Status?) {
+        val personalBook: PersonalBook? = getPersonalBookByBook(book)
+        if (personalBook == null) {
+            val newPersonalBook: PersonalBook = PersonalBook(
+                book=book,
+                status=status as Status // assuming we arent trying to delete non-existent book
+            )
+            books.add(newPersonalBook)
+        } else {
+            when (status) {
+                null -> removeBook(personalBook)
+                else -> personalBook.status = status
+            }
+        }
     }
 
     fun getBooks(status: Status?=null): List<PersonalBook> {

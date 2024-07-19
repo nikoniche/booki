@@ -11,42 +11,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.PersonalBookCard
+import com.example.booki.Screen
 import com.example.booki.books.PersonalBook
 import com.example.booki.books.Status
 
 @Composable
-fun PersonalBooksView() {
+fun PersonalBooksView(navHostController: NavHostController) {
     MyAppColumn(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        RowOfBooks(status = Status.Reading)
+        RowOfBooks(status = Status.Reading, navHostController=navHostController)
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.Finished)
+        RowOfBooks(status = Status.Finished, navHostController=navHostController)
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.NotRead)
+        RowOfBooks(status = Status.PlanToRead, navHostController=navHostController)
 
         Spacer(Modifier.height(8.dp))
         MyDivider()
         Spacer(Modifier.height(8.dp))
 
-        RowOfBooks(status = Status.Dropped)
+        RowOfBooks(status = Status.Dropped, navHostController=navHostController)
     }
 }
 
 @Composable
-fun RowOfBooks(status: Status) {
+fun RowOfBooks(status: Status, navHostController: NavHostController) {
     MyHeadline(text = status.inText)
     Spacer(Modifier.height(8.dp))
 
@@ -56,22 +59,26 @@ fun RowOfBooks(status: Status) {
             items(books) {
                     personalBook ->
                 when (status) {
-                    Status.NotRead -> PersonalBookCard(
+                    Status.PlanToRead -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
+                        navHostController=navHostController,
                     )
                     Status.Reading -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
+                        navHostController=navHostController,
                     )
                     Status.Finished -> PersonalBookCard(
                         personalBook = personalBook,
                         showRating = true,
+                        navHostController=navHostController,
                     )
                     Status.Dropped -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
                         showRating = true,
+                        navHostController=navHostController,
                     )
                 }
             }
@@ -84,5 +91,5 @@ fun RowOfBooks(status: Status) {
 @Preview(showBackground=true)
 @Composable
 fun PersonalBooksViewPreview() {
-    PersonalBooksView()
+    PersonalBooksView(rememberNavController())
 }

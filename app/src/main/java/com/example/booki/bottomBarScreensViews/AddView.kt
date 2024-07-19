@@ -2,45 +2,71 @@ package com.example.booki.bottomBarScreensViews
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.Card
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.booki.MyAppColumn
+import com.example.booki.MyDivider
+import com.example.booki.MyHeadline
+import com.example.booki.R
 import com.example.booki.Screen
 import com.example.booki.openLibraryAPI.OpenLibraryViewModel
 import com.example.booki.books.Book
+import java.util.Dictionary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddView(navController: NavHostController) {
     val openLibraryViewModel: OpenLibraryViewModel = viewModel()
@@ -55,20 +81,18 @@ fun AddView(navController: NavHostController) {
         mutableStateOf<Book?>(null)
     }
 
-    Column(
+    MyAppColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Find book by ISBN")
+        MyHeadline(text = "Find book by ISBN")
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp)
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             OutlinedTextField(
                 modifier = Modifier.padding(end=10.dp),
@@ -109,27 +133,122 @@ fun AddView(navController: NavHostController) {
                 )
             }
         }
-        Divider(Modifier.padding(vertical=20.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (searchingStatus) {
-                Text("Searching for the book..")
+            if (foundBook != null ) {
+                FoundBookCard(foundBook as Book) {
+                    navController.navigate(Screen.BookDetailsScreen.route+"/isbn/${it.getISBN()}")
+                }
             } else {
-                if (foundBook == null) {
-                    Text("Book not found.")
+                if (searchingStatus) {
+                    Text("Searching for the book..")
                 } else {
-                    Text("Book was found!")
-
+                    Text("Book was not found.")
                 }
             }
         }
 
-        if (foundBook != null ) {
-            FoundBookCard(foundBook as Book) {
-                navController.navigate(Screen.BookDetailsScreen.route+"/isbn/${it.isbn}")
+        MyDivider(modifier = Modifier.padding(vertical=12.dp))
+
+        MyHeadline(text = "Add a book manually")
+        Spacer(Modifier.height(16.dp))
+
+        @Composable
+        fun EntryField(labelText: String, value: String, modifier: Modifier=Modifier, onValueChanged: (String) -> Unit) {
+            OutlinedTextField(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                label={Text(labelText)},
+                placeholder={Text(labelText)},
+                colors=OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor=Color.Black,
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Black,
+                    unfocusedLabelColor = Color.Black,
+                    focusedLabelColor = Color.Black,
+                ),
+                value = value,
+                onValueChange = onValueChanged
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Image(
+                //painter = rememberAsyncImagePainter(model = personalBook.book.coverUrl),
+                painter= painterResource(R.drawable.nineteen_eighty_four),
+                contentDescription = "book cover",
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                modifier = Modifier
+                    .width(125.dp)
+                    .wrapContentHeight()
+                    .padding(16.dp)
+            )
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.padding(0.dp)
+            ) {
+                var titleState by remember {
+                    mutableStateOf("")
+                }
+                EntryField(
+                    labelText = "Title",
+                    value = titleState
+                ) {
+                    titleState = it
+                }
+
+                var authorState by remember {
+                    mutableStateOf("")
+                }
+                EntryField(
+                    labelText = "Author",
+                    value = authorState
+                ) {
+                    authorState = it
+                }
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            var numberOfPagesState by remember {
+                mutableStateOf("")
+            }
+            EntryField(
+                modifier = Modifier.weight(1f).padding(end=5.dp),
+                labelText = "Number of pages",
+                value = numberOfPagesState
+            ) {
+                numberOfPagesState = it
+            }
+
+            var isbnState by remember {
+                mutableStateOf("")
+            }
+            EntryField(
+                modifier = Modifier.weight(1f).padding(start=5.dp),
+                labelText = "ISBN",
+                value = isbnState
+            ) {
+                isbnState = it
             }
         }
     }
@@ -141,7 +260,7 @@ fun FoundBookCard(book: Book, onClick: (Book) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable{ onClick(book) },
+            .clickable { onClick(book) },
         elevation = 2.dp,
     ) {
         Row(
@@ -177,4 +296,10 @@ fun FoundBookCard(book: Book, onClick: (Book) -> Unit) {
             }
         }
     }
+}
+
+@Preview(showBackground=true)
+@Composable
+fun ShowPreview() {
+    AddView(navController = rememberNavController())
 }
