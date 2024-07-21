@@ -31,7 +31,7 @@ class Book(
 data class PersonalBook(
     val book: Book,
     var status: Status=Status.PlanToRead,
-    val readPages: Int=0,
+    var readPages: Int=0,
     val rating: Int=1, // 1-10 / 2 na 5 hvezdicek
     val review: String="",
 )

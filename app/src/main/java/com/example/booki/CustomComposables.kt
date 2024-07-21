@@ -6,17 +6,25 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Card
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -74,13 +82,14 @@ fun PersonalBookCard(
 {
     Card(
         modifier = Modifier
-            .wrapContentSize()
+            .width(150.dp)
+            .wrapContentHeight()
             .padding(end = 9.dp)
             .clickable {
                 navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/${personalBook.book.getISBN()}")
             },
         elevation = 4.dp,
-        border= BorderStroke(2.5.dp, Color.Black),
+        //border= BorderStroke(2.5.dp, Color.Black),
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -170,8 +179,43 @@ fun StarRating(personalBook: PersonalBook, starSize: Dp=16.dp) {
     }
 }
 
+@Composable
+fun MyOutlinedButton(
+    text: String,
+    additionalContent: @Composable () -> Unit={},
+    onClick: () -> Unit,
+    modifier: Modifier=Modifier
+) {
+    Button(
+        colors = ButtonDefaults
+            .buttonColors(
+                containerColor=Color.White,
+                contentColor=Color.Black
+            ),
+        border = BorderStroke(2.5.dp, Color.Black),
+        modifier = modifier.height(30.dp),
+        shape = ButtonDefaults.filledTonalShape,
+        contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
+        onClick={
+            onClick()
+        }
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxHeight()
+                .wrapContentWidth(),
+        ) {
+
+        }
+        Text(text, color=Color.Black, fontSize=16.sp)
+        additionalContent()
+    }
+}
+
 @Preview(showBackground=true)
 @Composable
 fun PersonalBookCardPreview() {
-    PersonalBookCard(personalBook = dummyPersonalBook, showRating = true, navHostController = rememberNavController())
+    PersonalBookCard(personalBook = dummyPersonalBook, showRating = true, showPageProgress = true, showReadingStatus = true, navHostController = rememberNavController())
 }

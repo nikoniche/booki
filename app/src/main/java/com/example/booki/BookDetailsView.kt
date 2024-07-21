@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -34,11 +37,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -167,7 +174,6 @@ fun BookView(
                     mutableStateOf(false)
                 }
 
-
                 Button(
                     onClick = {
                         dropDownMenuExpandedState = !dropDownMenuExpandedState
@@ -221,11 +227,66 @@ fun BookView(
 
                 if(bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                     personalBook as PersonalBook
+                    var pageProgressState by remember {
+                        mutableStateOf(personalBook.readPages.toString())
+                    }
+                    var valueChanged by remember {
+                        mutableStateOf(false)
+                    }
+                    val focusRequester = remember { FocusRequester() }
+                    val focusManager = LocalFocusManager.current
+
+                    BasicTextField(
+                        singleLine=true,
+                        textStyle = TextStyle(
+                            textAlign= TextAlign.End,
+                            fontSize = 16.sp,
+                        ),
+                        modifier=Modifier.width(30.dp).offset(y=1.dp).focusRequester(focusRequester),
+                        value = pageProgressState,
+                        onValueChange = {
+                            pageProgressState = it
+                            valueChanged = true
+                        }
+                    )
+
                     Text(
-                        text = "${personalBook.readPages}/${personalBook.book.numberOfPages}",
+                        text = "/${personalBook.book.numberOfPages}",
                         color = Color.Black,
                         fontSize = 16.sp
                     )
+
+                    if (valueChanged) {
+                        Button(
+                            colors = ButtonDefaults
+                                .buttonColors(
+                                    containerColor=Color.White,
+                                    contentColor=Color.Black
+                                ),
+                            border = BorderStroke(2.5.dp, Color.Green),
+                            modifier = Modifier.height(30.dp).padding(horizontal = 12.dp),
+                            shape = ButtonDefaults.filledTonalShape,
+                            contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
+                            onClick={
+                                personalRecordsViewModel.updateReadPages(personalBook, pageProgressState.toInt())
+                                println("new pages: ${personalBook.readPages}")
+                                focusManager.clearFocus()
+                                valueChanged = false
+                            }
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .wrapContentWidth(),
+                            ) {
+
+                            }
+                            Text("Save", color=Color.Green, fontSize=16.sp)
+                        }
+                    }
+
                     if(bookStatusState != Status.Reading) {
                         StarRating(personalBook = personalBook, starSize = 25.dp)
                     }
@@ -267,7 +328,7 @@ fun BookView(
                 )
             }
 
-            if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
+            /*if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
                 Spacer(Modifier.height(12.dp))
                 MyHeadline(text = "Book notes")
                 OutlinedTextField(
@@ -287,7 +348,7 @@ fun BookView(
                     value = "",
                     onValueChange = {}
                 )
-            }
+            }*/
         }
     }
 }

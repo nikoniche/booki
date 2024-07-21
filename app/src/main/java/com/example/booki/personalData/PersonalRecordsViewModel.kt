@@ -60,7 +60,6 @@ class PersonalRecordsViewModel: ViewModel() {
                 personalBookRepository.updatePersonalBook(personalBook)
             }
         }
-
     }
 
     fun getBooks(status: Status?=null): List<PersonalBook> {
@@ -74,6 +73,15 @@ class PersonalRecordsViewModel: ViewModel() {
                 if (book.status == status) matchingBooks.add(book)
             }
             matchingBooks
+        }
+    }
+
+    fun updateReadPages(personalBook: PersonalBook, newPages: Int) {
+        // assuming the desired changed property was already changed
+        // so the only task is to save it in the database
+        personalBook.readPages = newPages
+        viewModelScope.launch(Dispatchers.IO) {
+            personalBookRepository.updatePersonalBook(personalBook)
         }
     }
 }
