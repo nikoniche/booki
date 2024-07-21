@@ -10,8 +10,8 @@ data class PersonalBookEntity(
     @PrimaryKey(autoGenerate=true)
     val id: Long=0L,
 
-    @ColumnInfo("isbn")
-    val isbn: String,
+    @ColumnInfo("bookString")
+    val bookString: String,
     @ColumnInfo("statusId")
     val statusId: Int,
     @ColumnInfo("pageProgress")

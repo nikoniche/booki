@@ -1,6 +1,8 @@
 package com.example.booki.books
 
 import androidx.compose.ui.graphics.Color
+import com.google.gson.Gson
+
 class Book(
     val title: String="Unknown",
     val author: String="Anonymous",
@@ -19,6 +21,10 @@ class Book(
         } else {
             null
         }
+    }
+
+    fun textify(): String {
+        return Gson().toJson(this)
     }
 }
 

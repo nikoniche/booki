@@ -5,14 +5,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.forEach
 import com.example.booki.books.Book
 import com.example.booki.books.Status
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 
 class PersonalBookRepository(
     private val personalBookDao: PersonalBookDao
 ) {
-    fun convertPersonalBookToEntity(personalBook: PersonalBook): PersonalBookEntity {
+    private fun convertPersonalBookToEntity(personalBook: PersonalBook): PersonalBookEntity {
         return PersonalBookEntity(
-            isbn=personalBook.book.getISBN() ?: "", // potentional risk when multiple isbns fail
+            bookString=personalBook.book.textify(),
             statusId=personalBook.status.id,
             pageProgress = personalBook.readPages,
             rating=personalBook.rating,
@@ -33,7 +34,7 @@ class PersonalBookRepository(
 
         list.addAll(personalBookEntities.map { entity ->
             PersonalBook(
-                book = Book(),
+                book = Gson().fromJson(entity.bookString, Book::class.java),
                 status = when (entity.statusId) {
                     0 -> Status.PlanToRead
                     1 -> Status.Reading
