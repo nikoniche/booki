@@ -1,4 +1,4 @@
-package com.example.booki.books
+package com.example.booki
 
 import androidx.compose.ui.graphics.Color
 import com.google.gson.Gson
@@ -31,10 +31,10 @@ class Book(
 data class PersonalBook(
     val id: Long=0L,
     val book: Book,
-    var status: Status=Status.PlanToRead,
+    var status: Status = Status.PlanToRead,
     var readPages: Int=0,
     var rating: Int=1, // 1-10 / 2 na 5 hvezdicek
-    val review: String="",
+    var review: String="",
 )
 
 sealed class Status(

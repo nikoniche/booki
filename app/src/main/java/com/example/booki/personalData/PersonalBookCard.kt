@@ -1,4 +1,4 @@
-package com.example.booki
+package com.example.booki.personalData
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.booki.books.PersonalBook
+import com.example.booki.R
+import com.example.booki.Screen
+import com.example.booki.PersonalBook
 
 @Composable
 fun PersonalBookCard(

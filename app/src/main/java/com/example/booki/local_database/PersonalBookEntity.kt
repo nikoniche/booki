@@ -3,7 +3,6 @@ package com.example.booki.local_database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.booki.books.PersonalBook
 
 @Entity(tableName="personal_books-table")
 data class PersonalBookEntity(

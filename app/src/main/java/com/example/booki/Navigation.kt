@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.booki.book_details_views.BookDetailsView
 import com.example.booki.bottomBarScreensViews.AccountView
 import com.example.booki.bottomBarScreensViews.AddView
 import com.example.booki.bottomBarScreensViews.HomeView
@@ -50,7 +51,7 @@ class NavigationManager(
             ) {
                 entry ->
                 val bookIsbn: String? = if(entry.arguments != null) entry.arguments!!.getString("bookIsbn") else ""
-                BookDetails(
+                BookDetailsView(
                     bookIsbn = bookIsbn?: "",
                     personalRecordsViewModel=personalRecordsViewModel
                 )

@@ -2,9 +2,9 @@ package com.example.booki.personalData
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.booki.books.Book
-import com.example.booki.books.PersonalBook
-import com.example.booki.books.Status
+import com.example.booki.Book
+import com.example.booki.PersonalBook
+import com.example.booki.Status
 import com.example.booki.local_database.Graph
 import com.example.booki.local_database.PersonalBookRepository
 import kotlinx.coroutines.Dispatchers

@@ -17,10 +17,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
-import com.example.booki.PersonalBookCard
-import com.example.booki.Screen
-import com.example.booki.books.PersonalBook
-import com.example.booki.books.Status
+import com.example.booki.PersonalBook
+import com.example.booki.Status
 
 @Composable
 fun PersonalBooksView(

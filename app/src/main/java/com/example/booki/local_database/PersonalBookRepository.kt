@@ -1,9 +1,9 @@
 package com.example.booki.local_database
 
-import com.example.booki.books.PersonalBook
+import com.example.booki.PersonalBook
 import kotlinx.coroutines.flow.Flow
-import com.example.booki.books.Book
-import com.example.booki.books.Status
+import com.example.booki.Book
+import com.example.booki.Status
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 
