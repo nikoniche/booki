@@ -29,6 +29,7 @@ class Book(
 }
 
 data class PersonalBook(
+    val id: Long=0L,
     val book: Book,
     var status: Status=Status.PlanToRead,
     var readPages: Int=0,
@@ -41,37 +42,8 @@ sealed class Status(
     val inText: String,
     val color: Color,
 ) {
-    private val allStatuses: List<Status> = listOf(PlanToRead, Reading, Finished, Dropped)
-
-    fun getStatusById(statusId: Int): Status {
-        allStatuses.forEach {
-            if (it.id == statusId) {
-                return it
-            }
-        }
-        return PlanToRead // default, will never trigger
-    }
     data object PlanToRead : Status(id=0, "Plan to read", Color.Gray)
     data object Reading : Status(id=1, "Reading", Color.Yellow)
     data object Finished : Status(id=2, "Finished", Color.Green)
     data object Dropped : Status(id=3, "Dropped", Color.Red)
 }
-
-val dummyBook: Book = Book(
-    title="Dummy book",
-    author="Dummy author",
-    numberOfPages = 129,
-    publishDate = "1.3.2034",
-    isbn10="0141023996", // strictly isbn-10 (cause its fetched by the API)
-    description = "no description :(",
-)
-
-val dummyPersonalBook: PersonalBook = PersonalBook(
-    book=dummyBook,
-    status=Status.PlanToRead,
-    readPages=122,
-    rating=7,
-    review="was alright",
-)
-
-val dummyPersonalBooks = listOf(dummyPersonalBook, dummyPersonalBook.copy(status=Status.Finished), dummyPersonalBook.copy(), dummyPersonalBook.copy(status=Status.Dropped), dummyPersonalBook, dummyPersonalBook, dummyPersonalBook)

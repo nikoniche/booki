@@ -268,7 +268,8 @@ fun BookView(
                             shape = ButtonDefaults.filledTonalShape,
                             contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
                             onClick={
-                                personalRecordsViewModel.updateReadPages(personalBook, pageProgressState.toInt())
+                                personalBook.readPages = pageProgressState.toInt()
+                                personalRecordsViewModel.updateBook(personalBook)
                                 println("new pages: ${personalBook.readPages}")
                                 focusManager.clearFocus()
                                 valueChanged = false

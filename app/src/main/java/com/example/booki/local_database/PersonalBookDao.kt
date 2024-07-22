@@ -16,11 +16,11 @@ abstract class PersonalBookDao {
     @Query("Select * from `personal_books-table`")
     abstract fun getAllPersonalBooks(): Flow<List<PersonalBookEntity>>
 
-    @Update
-    abstract suspend fun updatePersonalBook(wishEntity: PersonalBookEntity)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun updatePersonalBook(personalBookEntity: PersonalBookEntity)
 
     @Delete
-    abstract suspend fun deletePersonalBook(wishEntity: PersonalBookEntity)
+    abstract suspend fun deletePersonalBook(personalBookEntity: PersonalBookEntity)
 
     @Query("Select * from `personal_books-table` where id=:id")
     abstract fun getPersonalBookById(id: Long): Flow<PersonalBookEntity>

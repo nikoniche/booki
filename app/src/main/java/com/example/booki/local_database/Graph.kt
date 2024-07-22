@@ -1,6 +1,7 @@
 package com.example.booki.local_database
 
 import android.content.Context
+import android.database.sqlite.SQLiteException
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -32,14 +33,19 @@ object Graph {
     }
 
     fun provide(context: Context) {
-        database = Room.databaseBuilder(
-            context = context,
-            klass = PersonalBookDatabase::class.java,
-            name = "personal_books.db",
-        )
-            .addMigrations(MIGRATION_1_2)
-            .fallbackToDestructiveMigration() // delete before production -> resetting DB on schema change
-            .build()
-        println("database provided")
+        try {
+            database = Room.databaseBuilder(
+                context = context,
+                klass = PersonalBookDatabase::class.java,
+                name = "personal_books.db",
+            )
+                //.addMigrations(MIGRATION_1_2)
+                .fallbackToDestructiveMigration() // delete before production -> resetting DB on schema change
+                .build()
+            println("database provided")
+        } catch (e: SQLiteException) {
+            println("database failed")
+        }
+
     }
 }

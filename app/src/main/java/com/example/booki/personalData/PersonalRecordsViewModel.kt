@@ -16,9 +16,19 @@ class PersonalRecordsViewModel: ViewModel() {
     private val personalBookRepository: PersonalBookRepository = Graph.personalBookRepository
 
     init {
+        refreshBooks()
+    }
+
+    private fun refreshBooks() {
         viewModelScope.launch(Dispatchers.IO) {
             val listOfSavedBooks = personalBookRepository.getPersonalBooks()
             books.addAll(listOfSavedBooks)
+        }
+    }
+
+    fun updateBook(personalBook: PersonalBook) {
+        viewModelScope.launch(Dispatchers.IO) {
+            personalBookRepository.updatePersonalBook(personalBook)
         }
     }
     fun removeBook(
@@ -45,7 +55,7 @@ class PersonalRecordsViewModel: ViewModel() {
         if (personalBook == null) {
             personalBook = PersonalBook(
                 book=book,
-                status=status as Status // assuming we arent trying to delete non-existent book
+                status =status as Status // assuming we arent trying to delete non-existent book
             )
             books.add(personalBook)
             viewModelScope.launch(Dispatchers.IO) {
@@ -56,9 +66,7 @@ class PersonalRecordsViewModel: ViewModel() {
                 null -> removeBook(personalBook)
                 else -> personalBook.status = status
             }
-            viewModelScope.launch(Dispatchers.IO) {
-                personalBookRepository.updatePersonalBook(personalBook)
-            }
+            updateBook(personalBook)
         }
     }
 
@@ -73,15 +81,6 @@ class PersonalRecordsViewModel: ViewModel() {
                 if (book.status == status) matchingBooks.add(book)
             }
             matchingBooks
-        }
-    }
-
-    fun updateReadPages(personalBook: PersonalBook, newPages: Int) {
-        // assuming the desired changed property was already changed
-        // so the only task is to save it in the database
-        personalBook.readPages = newPages
-        viewModelScope.launch(Dispatchers.IO) {
-            personalBookRepository.updatePersonalBook(personalBook)
         }
     }
 }

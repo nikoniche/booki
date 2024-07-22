@@ -41,7 +41,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.books.PersonalBook
-import com.example.booki.books.dummyPersonalBook
 
 @Composable
 fun MyHeadline(
@@ -212,10 +211,4 @@ fun MyOutlinedButton(
         Text(text, color=Color.Black, fontSize=16.sp)
         additionalContent()
     }
-}
-
-@Preview(showBackground=true)
-@Composable
-fun PersonalBookCardPreview() {
-    PersonalBookCard(personalBook = dummyPersonalBook, showRating = true, showPageProgress = true, showReadingStatus = true, navHostController = rememberNavController())
 }

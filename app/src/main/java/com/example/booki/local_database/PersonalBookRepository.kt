@@ -2,7 +2,6 @@ package com.example.booki.local_database
 
 import com.example.booki.books.PersonalBook
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.forEach
 import com.example.booki.books.Book
 import com.example.booki.books.Status
 import com.google.gson.Gson
@@ -13,6 +12,7 @@ class PersonalBookRepository(
 ) {
     private fun convertPersonalBookToEntity(personalBook: PersonalBook): PersonalBookEntity {
         return PersonalBookEntity(
+            id=personalBook.id,
             bookString=personalBook.book.textify(),
             statusId=personalBook.status.id,
             pageProgress = personalBook.readPages,
@@ -26,14 +26,10 @@ class PersonalBookRepository(
     }
 
     suspend fun getPersonalBooks(): List<PersonalBook> {
-        val flow: Flow<List<PersonalBookEntity>> = personalBookDao.getAllPersonalBooks()
-        val list: MutableList<PersonalBook> = mutableListOf()
-
-        val personalBookEntities = flow.first() // Collects the first emission
-        // !! PREVENTS THE COLLECT TO RUN INDEFINITELY !! DONT REMOVE
-
-        list.addAll(personalBookEntities.map { entity ->
+        val personalBookEntities = personalBookDao.getAllPersonalBooks().first()
+        return personalBookEntities.map { entity ->
             PersonalBook(
+                id = entity.id,
                 book = Gson().fromJson(entity.bookString, Book::class.java),
                 status = when (entity.statusId) {
                     0 -> Status.PlanToRead
@@ -46,9 +42,7 @@ class PersonalBookRepository(
                 rating = entity.rating,
                 review = entity.review
             )
-        })
-
-        return list
+        }
     }
 
     fun getPersonalBookEntityById(id: Long): Flow<PersonalBookEntity> {
@@ -57,6 +51,8 @@ class PersonalBookRepository(
 
     suspend fun updatePersonalBook(personalBook: PersonalBook) {
         personalBookDao.updatePersonalBook(convertPersonalBookToEntity(personalBook))
+        println("updated books: ${getPersonalBooks()}")
+        println("books updated")
     }
 
     suspend fun deletePersonalBook(personalBook: PersonalBook) {
