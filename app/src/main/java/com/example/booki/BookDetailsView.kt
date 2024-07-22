@@ -1,8 +1,12 @@
 package com.example.booki
 
+import androidx.annotation.Px
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -20,6 +25,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -31,21 +37,29 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +69,7 @@ import com.example.booki.books.PersonalBook
 import com.example.booki.books.Status
 import com.example.booki.openLibraryAPI.OpenLibraryViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun BookDetails(
@@ -242,7 +257,10 @@ fun BookView(
                             textAlign= TextAlign.End,
                             fontSize = 16.sp,
                         ),
-                        modifier=Modifier.width(30.dp).offset(y=1.dp).focusRequester(focusRequester),
+                        modifier= Modifier
+                            .width(30.dp)
+                            .offset(y = 1.dp)
+                            .focusRequester(focusRequester),
                         value = pageProgressState,
                         onValueChange = {
                             pageProgressState = it
@@ -264,7 +282,9 @@ fun BookView(
                                     contentColor=Color.Black
                                 ),
                             border = BorderStroke(2.5.dp, Color.Green),
-                            modifier = Modifier.height(30.dp).padding(horizontal = 12.dp),
+                            modifier = Modifier
+                                .height(30.dp)
+                                .padding(horizontal = 12.dp),
                             shape = ButtonDefaults.filledTonalShape,
                             contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
                             onClick={
@@ -289,7 +309,98 @@ fun BookView(
                     }
 
                     if(bookStatusState != Status.Reading) {
-                        StarRating(personalBook = personalBook, starSize = 25.dp)
+
+                        val starSize: Dp = 30.dp
+                        var newRating by remember {
+                            mutableIntStateOf(personalBook.rating)
+                        }
+
+                        @Composable
+                        fun HalfClickIconButton(
+                            order: Int,
+                            icon: @Composable () -> Unit,
+                        ) {
+                            val density = LocalDensity.current.density
+                            Box(
+                                modifier = Modifier
+                                    .size(starSize)
+                                    .border(2.dp, Color.Gray)
+                                    .pointerInput(this) {
+                                        detectTapGestures {
+                                            offset: Offset ->
+
+                                            val sizePx = starSize.toPx()
+                                            val clickPosition = offset.x / density
+                                            println("offset ${offset.x} vs size ${this.size.width / 2}")
+                                            newRating = order * 2
+                                            if (offset.x < sizePx / 2) {
+                                                newRating -= 1
+                                            } else {
+                                                // right side
+                                            }
+
+                                            personalBook.rating = newRating
+                                            personalRecordsViewModel.updateBook(personalBook)
+                                            println("Clicked order: $order -> newRating: $newRating")
+                                        }
+
+                                    }
+                            ) {
+                                println(order)
+                                icon()
+                                Text(order.toString())
+                            }
+                        }
+
+                        val amountOfFullStars: Int = newRating.div(2)
+                        val halfStar: Int = newRating.mod(2)
+
+                        Row {
+                            println("generating row for rating: $newRating")
+                            println("amount of full stars: $amountOfFullStars")
+                            println("half star: $halfStar")
+                            for (i in 0 until amountOfFullStars) {
+                                HalfClickIconButton(
+                                    order=i+1,
+                                    icon = {
+                                        Icon(
+                                            painter= painterResource(id = R.drawable.star),
+                                            contentDescription ="full star",
+                                            tint= Color.Unspecified,
+                                            modifier = Modifier.size(starSize)
+                                        )
+                                    }
+                                )
+                            }
+
+                            if (halfStar == 1) {
+                                HalfClickIconButton(
+                                    order=amountOfFullStars + 1,
+                                    icon = {
+                                        Icon(
+                                            painter= painterResource(id = R.drawable.half_star),
+                                            contentDescription ="half star",
+                                            tint= Color.Unspecified,
+                                            modifier = Modifier.size(starSize)
+                                        )
+                                    }
+                                )
+                            }
+
+                            for (i in 0 until 5-amountOfFullStars-halfStar) {
+                                HalfClickIconButton(
+                                    order=amountOfFullStars + halfStar + i + 1,
+                                    icon = {
+                                        Icon(
+                                            painter= painterResource(id = R.drawable.empty_star),
+                                            contentDescription ="empty star",
+                                            tint= Color.Unspecified,
+                                            modifier = Modifier.size(starSize)
+                                        )
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -353,3 +464,4 @@ fun BookView(
         }
     }
 }
+
