@@ -38,7 +38,12 @@ class Book(
         this.authors.forEach {
             text += "$it, "
         }
-        return text.substring(0, text.length - 2)
+        try {
+            return text.substring(0, text.length - 2)
+        }
+        catch (e: Exception) {
+            return "AUTHOR ERROR"
+        }
     }
 }
 

@@ -50,31 +50,7 @@ fun MainView() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Black),
-                title = {
-                    Text(
-                        text=currentScreen.name,
-                        style = TextStyle(
-                            fontSize=21.sp,
-                            fontWeight = FontWeight.Normal,
-                            color=Color.White,
-                        )
-                    )
-                },
-                navigationIcon = {
-//                        IconButton(onClick = {
-//                            navController.navigateUp()
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null,
-//                                tint= Color.Black
-//                            )
-//                        }
-                }
-            )
-        },
+        topBar = { BookiTopBar() },
         bottomBar = {
             BottomAppBar(
                 containerColor = Color.Black,
