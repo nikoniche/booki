@@ -18,6 +18,7 @@ class PersonalBookRepository(
             pageProgress = personalBook.readPages,
             rating=personalBook.rating,
             review=personalBook.review,
+            bookNotes=personalBook.bookNotes,
         )
     }
 
@@ -40,7 +41,8 @@ class PersonalBookRepository(
                 },
                 readPages = entity.pageProgress,
                 rating = entity.rating,
-                review = entity.review
+                review = entity.review,
+                bookNotes = entity.bookNotes
             )
         }
     }

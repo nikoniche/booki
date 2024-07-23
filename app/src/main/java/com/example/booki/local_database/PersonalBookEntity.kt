@@ -17,9 +17,8 @@ data class PersonalBookEntity(
     val pageProgress: Int,
     @ColumnInfo("review")
     val review: String,
-//    @ColumnInfo("bookNotes")
-//    val bookNotes: String,
     @ColumnInfo("rating")
     val rating: Int,
-
+    @ColumnInfo("bookNotes")
+    val bookNotes: String,
 )

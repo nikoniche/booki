@@ -35,6 +35,7 @@ data class PersonalBook(
     var readPages: Int=0,
     var rating: Int=1, // 1-10 / 2 na 5 hvezdicek
     var review: String="",
+    var bookNotes: String="",
 )
 
 sealed class Status(

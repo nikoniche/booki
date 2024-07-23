@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -195,27 +196,13 @@ fun BookView(
                 )
             }
 
-            /*if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
+            if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
                 Spacer(Modifier.height(12.dp))
-                MyHeadline(text = "Book notes")
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    label={Text("Book notes")},
-                    colors=OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor=Color.Black,
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Black,
-                        unfocusedLabelColor = Color.Black,
-                        focusedLabelColor = Color.Black,
-                    ),
-                    value = "",
-                    onValueChange = {}
+                EditableBookNotes(
+                    personalBook = personalBook as PersonalBook,
+                    personalRecordsViewModel = personalRecordsViewModel,
                 )
-            }*/
+            }
         }
     }
 }

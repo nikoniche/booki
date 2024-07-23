@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
+val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         // Drop the old table if it exists
         database.execSQL("DROP TABLE IF EXISTS `personal_books-table`")
@@ -19,6 +19,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 statusId INTEGER NOT NULL,
                 pageProgress INTEGER NOT NULL,
                 review TEXT NOT NULL,
+                bookNotes TEXT NOT NULL,
                 rating INTEGER NOT NULL
             )
         """)
@@ -39,7 +40,7 @@ object Graph {
                 klass = PersonalBookDatabase::class.java,
                 name = "personal_books.db",
             )
-                //.addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .fallbackToDestructiveMigration() // delete before production -> resetting DB on schema change
                 .build()
             println("database provided")
