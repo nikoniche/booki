@@ -25,19 +25,19 @@ class NavigationManager(
         NavHost(
             modifier = Modifier.padding(padding),
             navController = navHostController,
-            startDestination = Screen.BottomBarScreen.HomeScreen.route)
+            startDestination = Screen.HomeScreen.route)
         {
             // bottom bar screens
-            composable(Screen.BottomBarScreen.HomeScreen.route) {
+            composable(Screen.HomeScreen.route) {
                 HomeView(
                     navHostController=navHostController,
                     personalRecordsViewModel=personalRecordsViewModel,
                 )
             }
-            composable(Screen.BottomBarScreen.AddScreen.route) {
+            composable(Screen.AddScreen.route) {
                 AddView(navController=navHostController)
             }
-            composable(Screen.BottomBarScreen.AccountScreen.route) {
+            composable(Screen.AccountScreen.route) {
                 AccountView()
             }
 
