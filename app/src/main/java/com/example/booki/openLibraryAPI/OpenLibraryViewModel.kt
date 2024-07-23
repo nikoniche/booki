@@ -20,8 +20,7 @@ class OpenLibraryViewModel : ViewModel() {
                     println("Book was found.")
 
                     if (post != null) {
-                        post.records.entries.forEach {
-                            entry ->
+                        post.records.entries.forEach { entry ->
                             val bookData = entry.value.data
 
                             lateinit var isbn10: String
@@ -40,17 +39,31 @@ class OpenLibraryViewModel : ViewModel() {
                             if (bookData.cover != null) {
                                 coverUrl = bookData.cover.large
                             } else {
-                                coverUrl = "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
+                                coverUrl =
+                                    "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
+                            }
+                            lateinit var subtitle: String
+                            if (bookData.excerpts != null) {
+                                subtitle = bookData.excerpts[0].text
+                            } else {
+                                subtitle = ""
                             }
 
                             val book = Book(
                                 title = bookData.title,
-                                author = bookData.authors[0].name,
+                                authors = bookData.authors.map { it.name },
                                 numberOfPages = bookData.number_of_pages,
                                 publishDate = bookData.publish_date,
                                 isbn10 = isbn10,
                                 isbn13 = isbn13,
                                 coverUrl = coverUrl,
+
+                                subtitle = subtitle,
+                                publisher = bookData.publishers[0].name,
+                                genres = bookData.subjects.map {
+                                    it.name
+                                },
+                                source="OpenLibrary",
                             )
 
                             onResult(book)

@@ -5,13 +5,19 @@ import com.google.gson.Gson
 
 class Book(
     val title: String="Unknown",
-    val author: String="Anonymous",
+    val authors: List<String> = emptyList(),
     val numberOfPages: Int=-1,
     val publishDate: String="1.1.2000",
     val isbn10: String="",
     val isbn13: String="",
-    val description: String="",
     val coverUrl: String="https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png",
+
+    val subtitle: String="",
+    val description: String="",
+    val publisher: String="unknown publisher",
+    val genres: List<String> = emptyList(),
+    val language: String="unknown language",
+    val source: String="none", // OpenLibrary, User
 ) {
     fun getISBN(): String? {
         return if (isbn10 != "") {
@@ -25,6 +31,14 @@ class Book(
 
     fun textify(): String {
         return Gson().toJson(this)
+    }
+
+    fun getAuthors(): String {
+        var text = ""
+        this.authors.forEach {
+            text += "$it, "
+        }
+        return text.substring(0, text.length - 2)
     }
 }
 

@@ -266,7 +266,7 @@ fun FoundBookCard(book: Book, onClick: (Book) -> Unit) {
                         fontSize=16.sp,
                     )
                     Text(
-                        text=", ${book.author}",
+                        text=", ${book.getAuthors()}",
                         fontWeight= FontWeight.Normal,
                         fontSize=16.sp,
                     )

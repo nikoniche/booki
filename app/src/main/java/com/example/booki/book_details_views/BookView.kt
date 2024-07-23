@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
@@ -80,8 +81,15 @@ fun BookView(
                     fontWeight= FontWeight.Bold,
                     fontSize = 21.sp,
                 )
+                if (book.subtitle != "") {
+                    Text(
+                        text=book.subtitle,
+                        fontWeight=FontWeight.Normal,
+                        fontSize =17.sp,
+                    )
+                }
                 Text(
-                    text=book.author,
+                    text=book.getAuthors(),
                     fontStyle= FontStyle.Italic,
                     fontSize=16.sp,
                 )
@@ -89,6 +97,11 @@ fun BookView(
                     text="${book.numberOfPages} pages\n" +
                             "published: ${book.publishDate}\n" +
                             "ISBN: ${book.getISBN() ?: "missing isbn"}",
+                    fontSize=13.sp,
+                    color= Color.Gray
+                )
+                Text(
+                    text="publisher: ${book.publisher}",
                     fontSize=13.sp,
                     color= Color.Gray
                 )
@@ -206,4 +219,3 @@ fun BookView(
         }
     }
 }
-

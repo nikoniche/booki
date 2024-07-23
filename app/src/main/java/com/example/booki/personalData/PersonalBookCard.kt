@@ -73,7 +73,7 @@ fun PersonalBookCard(
             )
             Spacer(Modifier.height(textSpacerHeight))
             Text(
-                text=personalBook.book.author,
+                text=personalBook.book.getAuthors(),
                 fontWeight= FontWeight.Light,
                 fontSize=12.sp
             )
