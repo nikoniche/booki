@@ -67,15 +67,6 @@ fun HomeView(navHostController: NavHostController, personalRecordsViewModel: Per
                     navHostController.navigate(Screen.PersonalBooksScreen.route)
                 }
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .wrapContentWidth(),
-                ) {
-
-                }
                 Text("Browse", color=Color.Black, fontSize=16.sp)
                 Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null)
             }

@@ -25,7 +25,7 @@ class NavigationManager(
         NavHost(
             modifier = Modifier.padding(padding),
             navController = navHostController,
-            startDestination = Screen.HomeScreen.route)
+            startDestination = Screen.SearchResultsScreen.route)
         {
             // bottom bar screens
             composable(Screen.HomeScreen.route) {
@@ -62,6 +62,12 @@ class NavigationManager(
                     navHostController=navHostController,
                     personalRecordsViewModel=personalRecordsViewModel,
                 )
+            }
+            composable(Screen.AddBookManuallyScreen.route) {
+                AddBookManuallyView()
+            }
+            composable(Screen.SearchResultsScreen.route) {
+                SearchResultsView()
             }
         }
     }

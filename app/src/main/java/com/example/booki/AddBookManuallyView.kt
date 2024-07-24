@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -110,10 +111,17 @@ fun AddBookManuallyView(
         @Composable
         fun PropertyTextField(
             propertyName: String,
-            // todo add optionable placeholder, not always (for authors: seperate authors with a comma)
+            //writtenState: MutableState<String>,
+            onValueChange: (String) -> Unit,
+            placeholderText: String="",
             isAloneInLine: Boolean=true,
         ) {
             val modifier = if(!isAloneInLine) Modifier.weight(1f) else Modifier
+
+            var writtenState by remember {
+                mutableStateOf("")
+            }
+
             Column(
                 modifier= modifier
                     .padding(vertical = 6.dp)
@@ -126,31 +134,61 @@ fun AddBookManuallyView(
                     fontSize=18.sp,
                     fontWeight= FontWeight.SemiBold,
                 )
-                var writtenText by remember {
-                    mutableStateOf("testing text")
-                }
                 TextField(
                     modifier = Modifier
                         .wrapContentHeight()
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.White,
-                        unfocusedIndicatorColor = Color.Black, // Black underline when unfocused
-                        focusedIndicatorColor = Color.Black, // Black underline when focused
-                        cursorColor = Color.Black // Black cursor
+                        unfocusedIndicatorColor = Color.Black,
+                        focusedIndicatorColor = Color.Black,
+                        cursorColor = Color.Black,
+                        unfocusedPlaceholderColor=Color.Gray,
                     ),
+                    placeholder = {
+                        Text(
+                            text=placeholderText,
+
+                        )
+                    },
                     singleLine = true,
                     textStyle = TextStyle(color=Color.Black, fontSize = 16.sp),
-                    value = "testing title",
-                    onValueChange = {}
+                    value = writtenState,
+                    onValueChange = {
+                        writtenState = it
+                        onValueChange(writtenState)
+                    }
                 )
             }
 
         }
 
-        PropertyTextField(propertyName = "Title")
-        PropertyTextField(propertyName = "Subtitle")
-        PropertyTextField(propertyName = "Authors")
+        val userBook = Book()
+        PropertyTextField(
+            propertyName = "Title",
+            onValueChange = {
+                newValue ->
+                userBook.title = newValue
+            }
+        )
+        PropertyTextField(
+            propertyName = "Subtitle",
+            onValueChange = {
+                newValue ->
+                userBook.subtitle = newValue
+            }
+        )
+        PropertyTextField(
+            propertyName = "Authors",
+            placeholderText="seperate authors with a comma (Albert Camus, Franz Kafka)",
+            onValueChange = {
+                newValue ->
+                val namesList: List<String> = newValue.split(",").map {
+                    it.trim()
+                }
+                userBook.authors = namesList
+            }
+        )
 
         Row(
             modifier= Modifier
@@ -158,9 +196,39 @@ fun AddBookManuallyView(
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            PropertyTextField(propertyName = "Number of pages", isAloneInLine = false)
+            PropertyTextField(
+                propertyName = "Number of pages",
+                isAloneInLine = false,
+                onValueChange = {
+                    newValue ->
+                    newValue.trim()
+                    val newValueAsInt: Int? = newValue.toIntOrNull()
+                    if (newValueAsInt != null) {
+                        userBook.numberOfPages = newValueAsInt
+                    } else {
+                        // new value can not be cast to int
+                    }
+                }
+            )
             Spacer(Modifier.width(16.dp))
-            PropertyTextField(propertyName = "ISBN", isAloneInLine = false)
+            PropertyTextField(
+                propertyName = "ISBN",
+                isAloneInLine = false,
+                onValueChange = {
+                    newValue ->
+                    val transformedIsbn = newValue
+                        .replace("-", "")
+                        .replace(" ", "")
+                        .trim()
+                    when(transformedIsbn.length) {
+                        10 -> userBook.isbn10 = transformedIsbn
+                        13 -> userBook.isbn13 = transformedIsbn
+                        else -> {
+                            // isbn isnt correct length
+                        }
+                    }
+                }
+            )
         }
         Row(
             modifier= Modifier
@@ -168,15 +236,32 @@ fun AddBookManuallyView(
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            PropertyTextField(propertyName = "Publisher", isAloneInLine = false)
+            PropertyTextField(
+                propertyName = "Publisher",
+                isAloneInLine = false,
+                onValueChange = {
+                    newValue ->
+                    userBook.publisher = newValue
+                },
+            )
             Spacer(Modifier.width(16.dp))
-            PropertyTextField(propertyName = "Publish date", isAloneInLine = false)
+            PropertyTextField(
+                propertyName = "Publish date",
+                isAloneInLine = false,
+                onValueChange = {
+                    newValue ->
+                    userBook.publishDate = newValue
+                }
+            )
         }
 
         /*PropertyTextField(propertyName = "Description")
         PropertyTextField(propertyName = "Genres")*/
         Row(
-            modifier=Modifier.fillMaxWidth().wrapContentHeight().padding(top=16.dp),
+            modifier= Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(top = 16.dp),
             horizontalArrangement=Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

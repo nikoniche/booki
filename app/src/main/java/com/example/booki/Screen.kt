@@ -18,4 +18,13 @@ sealed class Screen(
         route="personal_books_screen"
     )
 
+    data object AddBookManuallyScreen: Screen(
+        name="Add book manually",
+        route="add_book_manually_screen"
+    )
+
+    data object SearchResultsScreen : Screen(
+        name="Results of book search",
+        route="search_results_screen"
+    )
 }

@@ -78,7 +78,6 @@ fun MainView() {
                                 modifier = Modifier.size(35.dp),
                                 painter = painterResource(id = when(screen) {
                                     Screen.HomeScreen -> R.drawable.ic_home
-                                    Screen.AddScreen -> R.drawable.ic_add
                                     Screen.AccountScreen -> R.drawable.ic_account
                                     else -> R.drawable.empty_star
                                 }),

@@ -4,17 +4,17 @@ import androidx.compose.ui.graphics.Color
 import com.google.gson.Gson
 
 class Book(
-    val title: String="Unknown",
-    val authors: List<String> = emptyList(),
-    val numberOfPages: Int=-1,
-    val publishDate: String="1.1.2000",
-    val isbn10: String="",
-    val isbn13: String="",
+    var title: String="Unknown",
+    var authors: List<String> = emptyList(),
+    var numberOfPages: Int=-1,
+    var publishDate: String="1.1.2000",
+    var isbn10: String="",
+    var isbn13: String="",
     val coverUrl: String="https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png",
 
-    val subtitle: String="",
+    var subtitle: String="",
     val description: String="",
-    val publisher: String="unknown publisher",
+    var publisher: String="unknown publisher",
     val genres: List<String> = emptyList(),
     val language: String="unknown language",
     val source: String="none", // OpenLibrary, User
