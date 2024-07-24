@@ -1,14 +1,13 @@
 package com.example.booki.openLibraryAPI
 
 import OpenLibraryResponse
-import androidx.lifecycle.ViewModel
 import com.example.booki.Book
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class OpenLibraryViewModel : ViewModel() {
+object OpenLibrary {
     fun getBookByISBN(isbn: String, onResult: (Book?) -> Unit) {
         val call = OpenLibraryClient.openLibraryService.getBookByISBN(isbn)
 

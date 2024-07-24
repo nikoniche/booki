@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.booki.Book
-import com.example.booki.openLibraryAPI.OpenLibraryViewModel
+import com.example.booki.openLibraryAPI.OpenLibrary
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
@@ -15,8 +15,6 @@ fun BookDetailsView(
     bookIsbn: String,
     personalRecordsViewModel: PersonalRecordsViewModel,
 ) {
-    val openLibraryViewModel: OpenLibraryViewModel = viewModel()
-
     var searched: Boolean by remember {
         mutableStateOf(false)
     }
@@ -28,7 +26,7 @@ fun BookDetailsView(
     }
 
     if (!searched) {
-        openLibraryViewModel.getBookByISBN(bookIsbn) {
+        OpenLibrary.getBookByISBN(bookIsbn) {
                 book ->
             println("book search finished")
             foundBook = book

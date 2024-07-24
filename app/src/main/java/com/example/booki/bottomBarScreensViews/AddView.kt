@@ -48,14 +48,12 @@ import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.R
 import com.example.booki.Screen
-import com.example.booki.openLibraryAPI.OpenLibraryViewModel
+import com.example.booki.openLibraryAPI.OpenLibrary
 import com.example.booki.Book
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddView(navController: NavHostController) {
-    val openLibraryViewModel: OpenLibraryViewModel = viewModel()
-
     var enteredISBN by remember {
         mutableStateOf("9781785042188")
     }
@@ -99,7 +97,7 @@ fun AddView(navController: NavHostController) {
                     .wrapContentSize(),
                 onClick={
                     searchingStatus = true
-                    openLibraryViewModel.getBookByISBN(enteredISBN) {
+                    OpenLibrary.getBookByISBN(enteredISBN) {
                         book ->
                         foundBook = book
                         searchingStatus = false
