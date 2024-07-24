@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.room.util.recursiveFetchLongSparseArray
 import com.example.booki.book_details_views.BookDetailsView
 import com.example.booki.bottomBarScreensViews.AccountView
 import com.example.booki.bottomBarScreensViews.AddView
@@ -18,14 +19,17 @@ import com.example.booki.personalData.PersonalRecordsViewModel
 
 class NavigationManager(
     private val navHostController: NavHostController,
+
+    // view models
     private val personalRecordsViewModel: PersonalRecordsViewModel,
+    private val searchViewModel: SearchViewModel,
 ) {
     @Composable
     fun NavigationView(padding: PaddingValues) {
         NavHost(
             modifier = Modifier.padding(padding),
             navController = navHostController,
-            startDestination = Screen.SearchResultsScreen.route)
+            startDestination = Screen.HomeScreen.route)
         {
             // bottom bar screens
             composable(Screen.HomeScreen.route) {
@@ -67,7 +71,10 @@ class NavigationManager(
                 AddBookManuallyView()
             }
             composable(Screen.SearchResultsScreen.route) {
-                SearchResultsView()
+                SearchResultsView(
+                    searchViewModel=searchViewModel,
+                    navHostController=navHostController,
+                )
             }
         }
     }

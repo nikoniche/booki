@@ -46,13 +46,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun SearchResultsView() {
-    val searching: Boolean? by remember {
-        mutableStateOf<Boolean?>(true)
-    }
-
+fun SearchResultsView(
+    searchViewModel: SearchViewModel,
+    navHostController: NavHostController,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,13 +64,29 @@ fun SearchResultsView() {
     ) {
         MyHeadline("Search results")
         Spacer(Modifier.height(8.dp))
-        if (searching == false) {  // todo change to if found any book
-            LazyColumn(
-
-            ) {
-                items(listOf(Book())) {
-                    foundBook ->
-                    FoundBookCard()
+        println("ui updated")
+        println(searchViewModel.search.value.result)
+        if (!searchViewModel.search.value.searching) {  // todo change to if found any book
+            if(searchViewModel.search.value.result.isNotEmpty()) {
+                LazyColumn {
+                    items(searchViewModel.search.value.result) {
+                            foundBook ->
+                        FoundBookCard(book=foundBook)
+                    }
+                }
+            } else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(vertical = 20.dp),
+                ) {
+                    Text(
+                        text="No book was found",
+                        fontSize=21.sp,
+                        fontStyle = FontStyle.Italic,
+                    )
                 }
             }
         } else {
@@ -77,22 +95,14 @@ fun SearchResultsView() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(vertical=20.dp),
+                    .padding(vertical = 20.dp),
             )
             {
-                if (searching == true) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(50.dp),
-                        color = Color.Black,
-                        backgroundColor = Color.LightGray,
-                    )
-                } else {
-                    Text(
-                        text="No book was found",
-                        fontSize=21.sp,
-                        fontStyle = FontStyle.Italic,
-                    )
-                }
+                CircularProgressIndicator(
+                    modifier = Modifier.size(50.dp),
+                    color = Color.Black,
+                    backgroundColor = Color.LightGray,
+                )
             }
         }
 
@@ -122,7 +132,7 @@ fun SearchResultsView() {
                 shape = ButtonDefaults.filledTonalShape,
                 contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
                 onClick={
-                    // todo navigate to manual add view
+                    navHostController.navigate(Screen.AddBookManuallyScreen.route)
                 }
             ) {
                 Text("Add manually", color=Color.Black, fontSize=16.sp)
@@ -132,7 +142,9 @@ fun SearchResultsView() {
 }
 
 @Composable
-fun FoundBookCard() {
+fun FoundBookCard(
+    book: Book,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -144,7 +156,7 @@ fun FoundBookCard() {
     ) {
         Row {
             Image(
-                painter=painterResource(R.drawable.nineteen_eighty_four),
+                painter=painterResource(R.drawable.ic_image),
                 contentDescription="cover of the book",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -153,7 +165,7 @@ fun FoundBookCard() {
             )
             Column {
                 Text(
-                    text="Nineteen eighty four is the best",
+                    text=book.title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
@@ -162,7 +174,7 @@ fun FoundBookCard() {
                     textAlign = TextAlign.Start,
                 )
                 Text(
-                    text="Author name, perhaps second",
+                    text=book.getAuthors(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 2.dp),
@@ -178,5 +190,8 @@ fun FoundBookCard() {
 @Preview(showBackground=true)
 @Composable
 fun SearchResultsViewPreview() {
-    SearchResultsView()
+    SearchResultsView(
+        searchViewModel = viewModel(),
+        navHostController = rememberNavController(),
+    )
 }
