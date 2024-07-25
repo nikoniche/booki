@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,14 +37,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
+import com.example.booki.R
 import com.example.booki.Status
 import com.example.booki.personalData.PersonalRecordsViewModel
 
@@ -67,7 +72,7 @@ fun BookView(
         ) {
             Image(
                 painter = rememberAsyncImagePainter(model = book.coverUrl),
-//                painter=painterResource(R.drawable.nineteen_eighty_four),
+            //painter=painterResource(R.drawable.nineteen_eighty_four),
                 contentDescription = "book cover",
                 contentScale = ContentScale.Fit,
                 alignment = AbsoluteAlignment.CenterLeft,
@@ -107,6 +112,20 @@ fun BookView(
                     fontSize=13.sp,
                     color= Color.Gray
                 )
+                if(book.source == "User") {
+                    // bacha ze na tu knihu co jsem tam uz pridal tohle nefunguje, protoze u ty jsem nemel jeste source zadanej
+                    IconButton(
+                        onClick = {
+                            // todo trigger add manual view as edit user book view
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = "edit user book button",
+                            tint=Color.Black,
+                        )
+                    }
+                }
             }
         }
 
@@ -220,4 +239,13 @@ fun BookView(
             }
         }
     }
+}
+
+@Preview(showBackground=true)
+@Composable
+fun BookViewPreview() {
+    BookView(
+        book = Book(),
+        personalRecordsViewModel = viewModel(),
+    )
 }

@@ -251,6 +251,13 @@ fun AddBookManuallyView(
                 shape = ButtonDefaults.filledTonalShape,
                 contentPadding = PaddingValues(horizontal=12.dp, vertical=0.dp),
                 onClick={
+                    val trimmedIsbn = isbnState.value.replace("-", "").replace(" ", "").trim()
+                    var isbnType: String? = null
+                    when (trimmedIsbn.length) {
+                        10 -> isbnType = "isbn10"
+                        13 -> isbnType = "isbn13"
+                    }
+
                     val userBook = Book(
                         title=titleState.value,
                         subtitle=subtitleState.value,
@@ -258,9 +265,12 @@ fun AddBookManuallyView(
                             it.trim()
                         },
                         numberOfPages = numberOfPagesState.value.toIntOrNull() ?: -2,
-                        isbn10 = isbnState.value,
+                        isbn10 = if (isbnType == "isbn10") trimmedIsbn else "",
+                        isbn13 = if (isbnType == "isbn13") trimmedIsbn else "",
                         publishDate = publishedDateState.value,
                         publisher = publisherState.value,
+
+                        source="User",
                     )
 
                     userBookViewModel.addBook(userBook)

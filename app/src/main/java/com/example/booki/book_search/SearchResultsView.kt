@@ -68,6 +68,7 @@ fun SearchResultsView(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
+                                .padding(bottom=12.dp)
                                 .clickable {
                                     navHostController.navigate(
                                         Screen.BookDetailsScreen.route + "/isbn/${foundBook.getISBN()}"

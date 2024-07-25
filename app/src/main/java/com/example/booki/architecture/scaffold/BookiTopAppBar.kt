@@ -79,7 +79,7 @@ fun BookiTopBar(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     var searchQuery by remember {
-                        mutableStateOf("9780141023991")
+                        mutableStateOf("")
                     }
                     val verticalScrollState = rememberScrollState()
                     val coroutineScope = rememberCoroutineScope()
