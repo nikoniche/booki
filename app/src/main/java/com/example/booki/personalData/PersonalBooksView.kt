@@ -18,12 +18,14 @@ import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.PersonalBook
+import com.example.booki.SearchViewModel
 import com.example.booki.Status
 
 @Composable
 fun PersonalBooksView(
     navHostController: NavHostController,
-    personalRecordsViewModel: PersonalRecordsViewModel
+    personalRecordsViewModel: PersonalRecordsViewModel,
+    searchViewModel: SearchViewModel,
 ) {
     MyAppColumn(
         modifier = Modifier.verticalScroll(rememberScrollState())
@@ -32,6 +34,7 @@ fun PersonalBooksView(
             status = Status.Reading,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
+            searchViewModel = searchViewModel,
         )
 
         Spacer(Modifier.height(8.dp))
@@ -42,6 +45,7 @@ fun PersonalBooksView(
             status = Status.Finished,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
+            searchViewModel = searchViewModel,
         )
 
         Spacer(Modifier.height(8.dp))
@@ -52,6 +56,7 @@ fun PersonalBooksView(
             status = Status.PlanToRead,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
+            searchViewModel = searchViewModel,
         )
 
         Spacer(Modifier.height(8.dp))
@@ -62,6 +67,7 @@ fun PersonalBooksView(
             status = Status.Dropped,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
+            searchViewModel = searchViewModel,
         )
     }
 }
@@ -71,6 +77,7 @@ fun RowOfBooks(
     status: Status,
     navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
+    searchViewModel: SearchViewModel,
 ) {
     MyHeadline(text = status.inText)
     Spacer(Modifier.height(8.dp))
@@ -85,22 +92,26 @@ fun RowOfBooks(
                         personalBook = personalBook,
                         showPageProgress = true,
                         navHostController=navHostController,
+                        searchViewModel = searchViewModel,
                     )
                     Status.Reading -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
                         navHostController=navHostController,
+                        searchViewModel = searchViewModel,
                     )
                     Status.Finished -> PersonalBookCard(
                         personalBook = personalBook,
                         showRating = true,
                         navHostController=navHostController,
+                        searchViewModel = searchViewModel,
                     )
                     Status.Dropped -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
                         showRating = true,
                         navHostController=navHostController,
+                        searchViewModel = searchViewModel,
                     )
                 }
             }
@@ -113,5 +124,5 @@ fun RowOfBooks(
 @Preview(showBackground=true)
 @Composable
 fun PersonalBooksViewPreview() {
-    PersonalBooksView(rememberNavController(), viewModel())
+    PersonalBooksView(rememberNavController(), viewModel(), viewModel())
 }

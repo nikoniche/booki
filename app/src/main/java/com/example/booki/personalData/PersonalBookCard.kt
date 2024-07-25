@@ -29,6 +29,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.booki.R
 import com.example.booki.Screen
 import com.example.booki.PersonalBook
+import com.example.booki.SearchViewModel
 
 @Composable
 fun PersonalBookCard(
@@ -37,6 +38,7 @@ fun PersonalBookCard(
     showReadingStatus: Boolean=false,
     showRating: Boolean=false,
     navHostController: NavHostController, // for quick accessing book details
+    searchViewModel: SearchViewModel,
 )
 {
     Box(
@@ -45,6 +47,8 @@ fun PersonalBookCard(
             .wrapContentHeight()
             .padding(end = 9.dp)
             .clickable {
+                println("clicking personal book: ${personalBook.book.title}, ${personalBook.book.getISBN()}")
+                searchViewModel.fetchSearchResults(personalBook.book.getISBN() ?: "")
                 navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/${personalBook.book.getISBN()}")
             },
         //elevation = 4.dp,

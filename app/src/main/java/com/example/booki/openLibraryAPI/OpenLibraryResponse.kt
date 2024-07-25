@@ -27,8 +27,8 @@ data class BookData(
     val publish_date: String,
     val subjects: List<Subject>,
     val subject_people: List<SubjectPerson>,
-    val excerpts: List<Excerpt>,
-    val cover: Cover
+    val excerpts: List<Excerpt>?,
+    val cover: Cover?
 )
 
 data class Author(
@@ -39,8 +39,8 @@ data class Author(
 data class Identifiers(
     val librarything: List<String>,
     val goodreads: List<String>,
-    val isbn_10: List<String>,
-    val isbn_13: List<String>,
+    val isbn_10: List<String>?,
+    val isbn_13: List<String>?,
     val oclc: List<String>,
     val openlibrary: List<String>
 )

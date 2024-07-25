@@ -1,12 +1,25 @@
 package com.example.booki.book_details_views
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.booki.Book
+import com.example.booki.SearchViewModel
 import com.example.booki.openLibraryAPI.OpenLibrary
 import com.example.booki.personalData.PersonalRecordsViewModel
 
@@ -14,40 +27,45 @@ import com.example.booki.personalData.PersonalRecordsViewModel
 fun BookDetailsView(
     bookIsbn: String,
     personalRecordsViewModel: PersonalRecordsViewModel,
+    searchViewModel: SearchViewModel,
 ) {
-    var searched: Boolean by remember {
-        mutableStateOf(false)
-    }
-    var loading by remember {
-        mutableStateOf(true)
-    }
-    var foundBook by remember {
-        mutableStateOf<Book?>(null)
-    }
-
-    if (!searched) {
-        OpenLibrary.getBookByISBN(bookIsbn) {
-                book ->
-            println("book search finished")
-            foundBook = book
-            searched = true
-            loading = false
+    if(!searchViewModel.search.value.searching) {
+        var foundBook: Book? = null
+        searchViewModel.search.value.result.forEach {
+            book ->
+            if(book.getISBN() == bookIsbn) {
+                foundBook = book
+            }
         }
-    }
-
-    if (foundBook != null) {
-        val loadedBook: Book = foundBook as Book
-        BookView(
-            book=loadedBook,
-            personalRecordsViewModel=personalRecordsViewModel,
-        )
+        if(foundBook != null) {
+            BookView(
+                book=foundBook as Book,
+                personalRecordsViewModel=personalRecordsViewModel,
+            )
+        } else {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 20.dp),
+            )
+            {
+                Text("Error during search: ${searchViewModel.search.value.error}")
+            }
+        }
     } else {
-        /*Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-        }*/
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 20.dp),
+        )
+        {
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp),
+                color = Color.Black,
+                backgroundColor = Color.LightGray,
+            )
+        }
     }
 }

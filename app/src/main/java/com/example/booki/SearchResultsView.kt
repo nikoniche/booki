@@ -3,6 +3,7 @@ package com.example.booki
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,14 +65,57 @@ fun SearchResultsView(
     ) {
         MyHeadline("Search results")
         Spacer(Modifier.height(8.dp))
-        println("ui updated")
-        println(searchViewModel.search.value.result)
-        if (!searchViewModel.search.value.searching) {  // todo change to if found any book
+
+        if (!searchViewModel.search.value.searching) {
             if(searchViewModel.search.value.result.isNotEmpty()) {
                 LazyColumn {
                     items(searchViewModel.search.value.result) {
-                            foundBook ->
-                        FoundBookCard(book=foundBook)
+                        foundBook ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .clickable {
+                                    navHostController.navigate(
+                                        Screen.BookDetailsScreen.route + "/isbn/${foundBook.getISBN()}"
+                                    )
+                                },
+                            elevation=CardDefaults.cardElevation(2.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                            ),
+                        ) {
+                            Row {
+                                Image(
+                                    painter=painterResource(R.drawable.ic_image),
+                                    contentDescription="cover of the book",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier
+                                        .width(80.dp)
+                                        .padding(8.dp)
+                                )
+                                Column {
+                                    Text(
+                                        text=foundBook.title,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 4.dp),
+                                        fontSize=21.sp,
+                                        fontWeight= FontWeight.Bold,
+                                        textAlign = TextAlign.Start,
+                                    )
+                                    Text(
+                                        text=foundBook.getAuthors(),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 2.dp),
+                                        fontSize=17.sp,
+                                        fontStyle = FontStyle.Italic,
+                                        textAlign = TextAlign.Start,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -106,7 +150,6 @@ fun SearchResultsView(
             }
         }
 
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -136,52 +179,6 @@ fun SearchResultsView(
                 }
             ) {
                 Text("Add manually", color=Color.Black, fontSize=16.sp)
-            }
-        }
-    }
-}
-
-@Composable
-fun FoundBookCard(
-    book: Book,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        elevation=CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-    ) {
-        Row {
-            Image(
-                painter=painterResource(R.drawable.ic_image),
-                contentDescription="cover of the book",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .width(80.dp)
-                    .padding(8.dp)
-            )
-            Column {
-                Text(
-                    text=book.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
-                    fontSize=21.sp,
-                    fontWeight= FontWeight.Bold,
-                    textAlign = TextAlign.Start,
-                )
-                Text(
-                    text=book.getAuthors(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp),
-                    fontSize=17.sp,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Start,
-                )
             }
         }
     }

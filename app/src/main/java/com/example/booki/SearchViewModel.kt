@@ -3,14 +3,18 @@ package com.example.booki
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.booki.openLibraryAPI.OpenLibrary
+import kotlinx.coroutines.launch
+import java.lang.IndexOutOfBoundsException
 
 class SearchViewModel(
 
 ) : ViewModel() {
     data class Search(
-        var searching: Boolean=false,
+        var searching: Boolean = true,
         var result: List<Book> = emptyList(),
+        var error: String="",
     )
 
     private val _search = mutableStateOf(Search())
@@ -19,41 +23,41 @@ class SearchViewModel(
     fun fetchSearchResults(query: String) {
         // notify the UI that the search is ongoing
         _search.value = Search()
-        _search.value.searching = true
 
         // determining whether or not the query was an ISBN
         val queryAsIsbnString = query.replace("-", "").replace(" ", "").trim()
         var searchByISBN = false
         if (queryAsIsbnString.length == 10 || queryAsIsbnString.length == 13) {
             if (queryAsIsbnString.toLongOrNull() != null) {
-                println("inputted an isbn")
                 searchByISBN = true
             }
         }
 
-        if(searchByISBN) {
+        if (searchByISBN) {
             // search by isbn
-            println("search by isbn triggered")
-            //_search.value.result = Bookmaster.getBooksByISBN(queryAsIsbnString)
-            OpenLibrary.getBookByISBN(queryAsIsbnString) {
-                if (it != null) {
-                    // todo would be cool to someohow use the bookmaster
-                    // problem is that the code doesnt wait for the openlibrary function to finish
-                    // and its weird to have 2 pasted onFinished functions-but it would work
-                    _search.value.result = listOf(it)
-                    println("found book: ${_search.value.result}")
+            viewModelScope.launch {
+                try {
+                    println("triggering")
+                    _search.value = _search.value.copy(
+                        result=OpenLibrary.getBookByISBN(isbn = queryAsIsbnString),
+                    )
+                } catch (e: Exception) {
+                    // failed
+                    _search.value = _search.value.copy(
+                        error="error: ${e.toString()}, message: ${e.message ?: "null message"}",
+                    )
+                } finally {
+                    _search.value = _search.value.copy(
+                        searching=false,
+                    )
                 }
-                _search.value.searching = false
-                println(search.value.toString())
-            }
-
-            println("search finished")
-        } else {
+            } /*else {
             // search by matching words
             val individualQueryWords = query.split(" ").map {
                 it.trim()
             }
-            /* todo pridat do bookmaster funkci, ktera zavoli funkci OpenLibrary, ale taky by mela vratit list */
+            *//* todo pridat do bookmaster funkci, ktera zavoli funkci OpenLibrary, ale taky by mela vratit list *//*
+        }*/
         }
     }
 }

@@ -12,7 +12,6 @@ import androidx.navigation.navArgument
 import androidx.room.util.recursiveFetchLongSparseArray
 import com.example.booki.book_details_views.BookDetailsView
 import com.example.booki.bottomBarScreensViews.AccountView
-import com.example.booki.bottomBarScreensViews.AddView
 import com.example.booki.bottomBarScreensViews.HomeView
 import com.example.booki.personalData.PersonalBooksView
 import com.example.booki.personalData.PersonalRecordsViewModel
@@ -36,11 +35,12 @@ class NavigationManager(
                 HomeView(
                     navHostController=navHostController,
                     personalRecordsViewModel=personalRecordsViewModel,
+                    searchViewModel=searchViewModel,
                 )
             }
-            composable(Screen.AddScreen.route) {
+            /*composable(Screen.AddScreen.route) {
                 AddView(navController=navHostController)
-            }
+            }*/
             composable(Screen.AccountScreen.route) {
                 AccountView()
             }
@@ -57,7 +57,8 @@ class NavigationManager(
                 val bookIsbn: String? = if(entry.arguments != null) entry.arguments!!.getString("bookIsbn") else ""
                 BookDetailsView(
                     bookIsbn = bookIsbn?: "",
-                    personalRecordsViewModel=personalRecordsViewModel
+                    personalRecordsViewModel=personalRecordsViewModel,
+                    searchViewModel=searchViewModel,
                 )
             }
 
@@ -65,6 +66,7 @@ class NavigationManager(
                 PersonalBooksView(
                     navHostController=navHostController,
                     personalRecordsViewModel=personalRecordsViewModel,
+                    searchViewModel = searchViewModel,
                 )
             }
             composable(Screen.AddBookManuallyScreen.route) {

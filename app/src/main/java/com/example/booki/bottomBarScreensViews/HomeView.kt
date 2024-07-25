@@ -34,10 +34,15 @@ import com.example.booki.MyHeadline
 import com.example.booki.personalData.PersonalBookCard
 import com.example.booki.Screen
 import com.example.booki.PersonalBook
+import com.example.booki.SearchViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
-fun HomeView(navHostController: NavHostController, personalRecordsViewModel: PersonalRecordsViewModel) {
+fun HomeView(
+    navHostController: NavHostController,
+    personalRecordsViewModel: PersonalRecordsViewModel,
+    searchViewModel: SearchViewModel,
+) {
     MyAppColumn {
         ReadInLast("Books read this year", 27)
         Spacer(Modifier.height(6.dp))
@@ -83,6 +88,7 @@ fun HomeView(navHostController: NavHostController, personalRecordsViewModel: Per
                         showPageProgress = true,
                         showReadingStatus = true,
                         navHostController=navHostController,
+                        searchViewModel = searchViewModel,
                     )
                 }
             }
