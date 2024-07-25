@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,13 +40,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.booki.Book
 import com.example.booki.R
+import com.example.booki.architecture.navigation.Screen
+import com.example.booki.personalData.local_database.Graph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBookManuallyView(
-    //personalRecordsViewModel: PersonalRecordsViewModel=viewModel()
+    navHostController: NavHostController,
+    searchViewModel: SearchViewModel,
+    userBookViewModel: UserBookViewModel,
 ) {
     Column(
         modifier = Modifier
@@ -95,16 +103,12 @@ fun AddBookManuallyView(
         @Composable
         fun PropertyTextField(
             propertyName: String,
-            //writtenState: MutableState<String>,
-            onValueChange: (String) -> Unit,
+            writtenState: MutableState<String>,
+            //onValueChange: (String) -> Unit,
             placeholderText: String="",
             isAloneInLine: Boolean=true,
         ) {
             val modifier = if(!isAloneInLine) Modifier.weight(1f) else Modifier
-
-            var writtenState by remember {
-                mutableStateOf("")
-            }
 
             Column(
                 modifier= modifier
@@ -132,46 +136,54 @@ fun AddBookManuallyView(
                     placeholder = {
                         Text(
                             text=placeholderText,
-
                         )
                     },
                     singleLine = true,
                     textStyle = TextStyle(color=Color.Black, fontSize = 16.sp),
-                    value = writtenState,
+                    value = writtenState.value,
                     onValueChange = {
-                        writtenState = it
-                        onValueChange(writtenState)
+                        writtenState.value = it
                     }
                 )
             }
 
         }
 
-        val userBook = Book()
+        val titleState = remember {
+            mutableStateOf("")
+        }
+        val subtitleState = remember {
+            mutableStateOf("")
+        }
+        val authorsState = remember {
+            mutableStateOf("")
+        }
+        val numberOfPagesState = remember {
+            mutableStateOf("")
+        }
+        val isbnState = remember {
+            mutableStateOf("")
+        }
+        val publisherState = remember {
+            mutableStateOf("")
+        }
+        val publishedDateState = remember {
+            mutableStateOf("")
+        }
+
         PropertyTextField(
             propertyName = "Title",
-            onValueChange = {
-                newValue ->
-                userBook.title = newValue
-            }
+            writtenState = titleState,
+
         )
         PropertyTextField(
             propertyName = "Subtitle",
-            onValueChange = {
-                newValue ->
-                userBook.subtitle = newValue
-            }
+            writtenState = subtitleState,
         )
         PropertyTextField(
             propertyName = "Authors",
             placeholderText="seperate authors with a comma (Albert Camus, Franz Kafka)",
-            onValueChange = {
-                newValue ->
-                val namesList: List<String> = newValue.split(",").map {
-                    it.trim()
-                }
-                userBook.authors = namesList
-            }
+            writtenState = authorsState,
         )
 
         Row(
@@ -183,35 +195,13 @@ fun AddBookManuallyView(
             PropertyTextField(
                 propertyName = "Number of pages",
                 isAloneInLine = false,
-                onValueChange = {
-                    newValue ->
-                    newValue.trim()
-                    val newValueAsInt: Int? = newValue.toIntOrNull()
-                    if (newValueAsInt != null) {
-                        userBook.numberOfPages = newValueAsInt
-                    } else {
-                        // new value can not be cast to int
-                    }
-                }
+                writtenState = numberOfPagesState,
             )
             Spacer(Modifier.width(16.dp))
             PropertyTextField(
                 propertyName = "ISBN",
                 isAloneInLine = false,
-                onValueChange = {
-                    newValue ->
-                    val transformedIsbn = newValue
-                        .replace("-", "")
-                        .replace(" ", "")
-                        .trim()
-                    when(transformedIsbn.length) {
-                        10 -> userBook.isbn10 = transformedIsbn
-                        13 -> userBook.isbn13 = transformedIsbn
-                        else -> {
-                            // isbn isnt correct length
-                        }
-                    }
-                }
+                writtenState = isbnState,
             )
         }
         Row(
@@ -223,19 +213,13 @@ fun AddBookManuallyView(
             PropertyTextField(
                 propertyName = "Publisher",
                 isAloneInLine = false,
-                onValueChange = {
-                    newValue ->
-                    userBook.publisher = newValue
-                },
+                writtenState = publisherState,
             )
             Spacer(Modifier.width(16.dp))
             PropertyTextField(
                 propertyName = "Publish date",
                 isAloneInLine = false,
-                onValueChange = {
-                    newValue ->
-                    userBook.publishDate = newValue
-                }
+                writtenState = publishedDateState,
             )
         }
 
@@ -267,10 +251,31 @@ fun AddBookManuallyView(
                 shape = ButtonDefaults.filledTonalShape,
                 contentPadding = PaddingValues(horizontal=12.dp, vertical=0.dp),
                 onClick={
-                    // todo save the book with source "User"
+                    val userBook = Book(
+                        title=titleState.value,
+                        subtitle=subtitleState.value,
+                        authors=authorsState.value.split(",").map {
+                            it.trim()
+                        },
+                        numberOfPages = numberOfPagesState.value.toIntOrNull() ?: -2,
+                        isbn10 = isbnState.value,
+                        publishDate = publishedDateState.value,
+                        publisher = publisherState.value,
+                    )
+
+                    userBookViewModel.addBook(userBook)
+
+                    searchViewModel.fetchSearchResults(userBook.getISBN() ?: "")
+                    navHostController.navigate(
+                        Screen.BookDetailsScreen.route + "/isbn/${userBook.getISBN()}"
+                    )
                 }
             ) {
-                Text("Add book", color = Color.Black, fontSize = 17.sp)
+                Text(
+                    text="Add book",
+                    color = Color.Black,
+                    fontSize = 17.sp
+                )
             }
         }
     }
@@ -279,5 +284,9 @@ fun AddBookManuallyView(
 @Preview(showBackground=true)
 @Composable
 fun AddBookManuallyViewPreview() {
-    AddBookManuallyView()
+    AddBookManuallyView(
+        rememberNavController(),
+        searchViewModel = viewModel(),
+        userBookViewModel = viewModel(),
+    )
 }

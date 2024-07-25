@@ -6,19 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.booki.Book
 import com.example.booki.book_search.apis.openLibraryAPI.OpenLibrary
+import com.example.booki.personalData.local_database.Graph
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
-
-) : ViewModel() {
+class SearchViewModel: ViewModel() {
     data class Search(
         var searching: Boolean = true,
-        var result: List<Book> = emptyList(),
+        var result: MutableList<Book> = mutableListOf(),
         var error: String="",
     )
 
+    private val userBookRepository = Graph.userBookRepository
+
     private val _search = mutableStateOf(Search())
     val search: State<Search> = _search
+
+    private fun extendResultsList(listToAdd: List<Book>) {
+        val extendedList = _search.value.result
+        extendedList.addAll(listToAdd)
+        _search.value = _search.value.copy(
+            result=extendedList
+        )
+    }
 
     fun fetchSearchResults(query: String) {
         // notify the UI that the search is ongoing
@@ -37,9 +46,22 @@ class SearchViewModel(
             // search by isbn
             viewModelScope.launch {
                 try {
-                    _search.value = _search.value.copy(
-                        result= OpenLibrary.getBookByISBN(isbn = queryAsIsbnString),
+                    extendResultsList(
+                        OpenLibrary.getBookByISBN(queryAsIsbnString)
                     )
+
+                    // search user books
+                    val userBooks = userBookRepository.getUserBooks()
+                    val matchingUserBooks: MutableList<Book> = mutableListOf()
+                    userBooks.forEach {
+                        if (it.getISBN() == queryAsIsbnString) {
+                            matchingUserBooks.add(it)
+                        }
+                    }
+                    extendResultsList(
+                        matchingUserBooks
+                    )
+                    println(matchingUserBooks)
                 } catch (e: Exception) {
                     // failed
                     _search.value = _search.value.copy(

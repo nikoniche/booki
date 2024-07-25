@@ -16,6 +16,7 @@ import com.example.booki.architecture.book_details_views.BookDetailsView
 import com.example.booki.architecture.menuViews.AccountView
 import com.example.booki.architecture.menuViews.HomeView
 import com.example.booki.architecture.menuViews.PersonalBooksView
+import com.example.booki.book_search.UserBookViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 class NavigationManager(
@@ -23,6 +24,7 @@ class NavigationManager(
 
     // view models
     private val personalRecordsViewModel: PersonalRecordsViewModel,
+    private val userBookViewModel: UserBookViewModel,
     private val searchViewModel: SearchViewModel,
 ) {
     @Composable
@@ -72,7 +74,11 @@ class NavigationManager(
                 )
             }
             composable(Screen.AddBookManuallyScreen.route) {
-                AddBookManuallyView()
+                AddBookManuallyView(
+                    navHostController=navHostController,
+                    searchViewModel=searchViewModel,
+                    userBookViewModel=userBookViewModel,
+                )
             }
             composable(Screen.SearchResultsScreen.route) {
                 SearchResultsView(
@@ -81,8 +87,5 @@ class NavigationManager(
                 )
             }
         }
-    }
-    fun NavigateToScreen(screen: Screen) {
-        navHostController.navigate(screen.route)
     }
 }

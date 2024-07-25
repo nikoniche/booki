@@ -17,6 +17,7 @@ import com.example.booki.book_search.SearchViewModel
 import com.example.booki.architecture.scaffold.BookiTopBar
 import com.example.booki.architecture.scaffold.DropdownNavigationMenu
 import com.example.booki.architecture.scaffold.ScaffoldViewModel
+import com.example.booki.book_search.UserBookViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
@@ -24,6 +25,7 @@ fun MainView() {
     val navHostController: NavHostController = rememberNavController()
 
     val personalRecordsViewModel: PersonalRecordsViewModel = viewModel()
+    val userBookViewModel: UserBookViewModel = viewModel()
     val searchViewModel: SearchViewModel = viewModel()
     val scaffoldViewModel: ScaffoldViewModel = viewModel()
 
@@ -31,6 +33,7 @@ fun MainView() {
         navHostController = navHostController,
 
         personalRecordsViewModel=personalRecordsViewModel,
+        userBookViewModel=userBookViewModel,
         searchViewModel=searchViewModel,
     )
 
