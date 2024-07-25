@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.R
-import com.example.booki.Screen
+import com.example.booki.architecture.navigation.Screen
 import com.example.booki.PersonalBook
 import com.example.booki.SearchViewModel
 

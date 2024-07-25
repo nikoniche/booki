@@ -1,4 +1,4 @@
-package com.example.booki
+package com.example.booki.architecture.scaffold
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -37,24 +37,33 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.booki.R
+import com.example.booki.architecture.navigation.Screen
+import com.example.booki.SearchViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookiTopBar(
+    scaffoldViewModel: ScaffoldViewModel,
     searchViewModel: SearchViewModel,
     navHostController: NavHostController,
 ) {
     TopAppBar(
         navigationIcon = {
-            Icon(
-                painter=painterResource(R.drawable.ic_menu_book),
-                contentDescription = "app icon",
-                tint= Color.White,
-                modifier = Modifier
-                    .size(35.dp)
-                    .padding(start = 4.dp)
-            )
+            IconButton(
+                onClick = {
+                    navHostController.navigate(Screen.HomeScreen.route)
+                },
+            ) {
+                Icon(painter=painterResource(R.drawable.ic_menu_book),
+                    contentDescription = "app icon",
+                    tint= Color.White,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .padding(start = 4.dp)
+                )
+            }
         },
         title = {
             Box(
@@ -136,7 +145,9 @@ fun BookiTopBar(
         },
         actions = {
             IconButton(
-                onClick={}
+                onClick={
+                    scaffoldViewModel.menuOpened.value = !scaffoldViewModel.menuOpened.value
+                }
             ) {
                 Icon(
                     painter= painterResource(id = R.drawable.ic_menu),
@@ -158,5 +169,5 @@ fun BookiTopBar(
 @Preview(showBackground=true)
 @Composable
 fun BookiTopBarPreview() {
-    BookiTopBar(viewModel(), rememberNavController())
+    BookiTopBar(viewModel(), viewModel(), rememberNavController())
 }

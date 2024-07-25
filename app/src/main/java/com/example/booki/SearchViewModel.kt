@@ -37,14 +37,13 @@ class SearchViewModel(
             // search by isbn
             viewModelScope.launch {
                 try {
-                    println("triggering")
                     _search.value = _search.value.copy(
                         result=OpenLibrary.getBookByISBN(isbn = queryAsIsbnString),
                     )
                 } catch (e: Exception) {
                     // failed
                     _search.value = _search.value.copy(
-                        error="error: ${e.toString()}, message: ${e.message ?: "null message"}",
+                        error="error: ${e}, message: ${e.message ?: "null message"}",
                     )
                 } finally {
                     _search.value = _search.value.copy(
@@ -56,7 +55,6 @@ class SearchViewModel(
             val individualQueryWords = query.split(" ").map {
                 it.trim()
             }
-            *//* todo pridat do bookmaster funkci, ktera zavoli funkci OpenLibrary, ale taky by mela vratit list *//*
         }*/
         }
     }

@@ -1,4 +1,4 @@
-package com.example.booki
+package com.example.booki.architecture.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -9,7 +9,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.room.util.recursiveFetchLongSparseArray
+import com.example.booki.AddBookManuallyView
+import com.example.booki.SearchResultsView
+import com.example.booki.SearchViewModel
 import com.example.booki.book_details_views.BookDetailsView
 import com.example.booki.bottomBarScreensViews.AccountView
 import com.example.booki.bottomBarScreensViews.HomeView
@@ -46,7 +48,7 @@ class NavigationManager(
             }
 
             composable(
-                route=Screen.BookDetailsScreen.route + "/isbn/{bookIsbn}",
+                route= Screen.BookDetailsScreen.route + "/isbn/{bookIsbn}",
                 arguments = listOf(
                     navArgument("bookIsbn") {
                         type = NavType.StringType

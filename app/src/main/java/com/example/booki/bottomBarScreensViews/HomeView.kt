@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +30,7 @@ import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.personalData.PersonalBookCard
-import com.example.booki.Screen
+import com.example.booki.architecture.navigation.Screen
 import com.example.booki.PersonalBook
 import com.example.booki.SearchViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel

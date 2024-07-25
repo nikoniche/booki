@@ -1,37 +1,32 @@
-package com.example.booki
+package com.example.booki.architecture
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.booki.architecture.navigation.NavigationManager
+import com.example.booki.architecture.navigation.Screen
+import com.example.booki.SearchViewModel
+import com.example.booki.architecture.scaffold.BookiTopBar
+import com.example.booki.architecture.scaffold.DropdownNavigationMenu
+import com.example.booki.architecture.scaffold.ScaffoldViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
     val navHostController: NavHostController = rememberNavController()
+
     val personalRecordsViewModel: PersonalRecordsViewModel = viewModel()
     val searchViewModel: SearchViewModel = viewModel()
+    val scaffoldViewModel: ScaffoldViewModel = viewModel()
+
     val navigationManager = NavigationManager(
         navHostController = navHostController,
 
@@ -49,11 +44,12 @@ fun MainView() {
     Scaffold(
         topBar = {
             BookiTopBar(
+                scaffoldViewModel=scaffoldViewModel,
                 searchViewModel=searchViewModel,
                 navHostController=navHostController,
             )
         },
-        bottomBar = {
+        /*bottomBar = {
             BottomAppBar(
                 containerColor = Color.Black,
             ) {
@@ -62,7 +58,7 @@ fun MainView() {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    listOf(Screen.HomeScreen, Screen.AddScreen, Screen.AccountScreen).forEach {
+                    listOf(Screen.HomeScreen, Screen.AccountScreen).forEach {
                         screen ->
                         IconButton(
                             onClick = {
@@ -90,9 +86,14 @@ fun MainView() {
                     }
                 }
             }
-        }
-
+        }*/
     ) {
+        if (scaffoldViewModel.menuOpened.value) {
+            DropdownNavigationMenu(
+                scaffoldViewModel=scaffoldViewModel,
+                navHostController=navHostController,
+            )
+        }
         navigationManager.NavigationView(it)
     }
 }

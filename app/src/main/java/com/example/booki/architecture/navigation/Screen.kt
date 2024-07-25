@@ -1,4 +1,4 @@
-package com.example.booki
+package com.example.booki.architecture.navigation
 
 sealed class Screen(
     val name: String,
