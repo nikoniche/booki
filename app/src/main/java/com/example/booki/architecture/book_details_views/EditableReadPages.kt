@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.booki.PersonalBook
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun EditableReadPages(

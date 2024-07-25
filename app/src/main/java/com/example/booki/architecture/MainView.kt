@@ -17,7 +17,7 @@ import com.example.booki.book_search.SearchViewModel
 import com.example.booki.architecture.scaffold.BookiTopBar
 import com.example.booki.architecture.scaffold.DropdownNavigationMenu
 import com.example.booki.architecture.scaffold.ScaffoldViewModel
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun MainView() {

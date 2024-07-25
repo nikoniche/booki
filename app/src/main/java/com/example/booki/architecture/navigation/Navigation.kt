@@ -16,7 +16,7 @@ import com.example.booki.architecture.book_details_views.BookDetailsView
 import com.example.booki.architecture.menuViews.AccountView
 import com.example.booki.architecture.menuViews.HomeView
 import com.example.booki.architecture.menuViews.PersonalBooksView
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 class NavigationManager(
     private val navHostController: NavHostController,

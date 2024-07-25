@@ -45,7 +45,7 @@ import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
 import com.example.booki.Status
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun BookView(

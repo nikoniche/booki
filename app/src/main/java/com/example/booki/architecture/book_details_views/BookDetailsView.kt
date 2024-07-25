@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.booki.Book
 import com.example.booki.book_search.SearchViewModel
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun BookDetailsView(

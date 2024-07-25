@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.booki.MyHeadline
 import com.example.booki.R
 import com.example.booki.PersonalBook
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun EditableReview(

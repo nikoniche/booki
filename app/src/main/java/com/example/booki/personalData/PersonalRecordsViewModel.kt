@@ -1,12 +1,12 @@
-package com.example.booki.data
+package com.example.booki.personalData
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.booki.Book
 import com.example.booki.PersonalBook
 import com.example.booki.Status
-import com.example.booki.data.local_database.Graph
-import com.example.booki.data.local_database.PersonalBookRepository
+import com.example.booki.personalData.local_database.Graph
+import com.example.booki.personalData.local_database.PersonalBookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

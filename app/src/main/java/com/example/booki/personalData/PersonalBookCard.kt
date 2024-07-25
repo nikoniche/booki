@@ -1,4 +1,4 @@
-package com.example.booki.data
+package com.example.booki.personalData
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

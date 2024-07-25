@@ -20,8 +20,8 @@ import com.example.booki.MyHeadline
 import com.example.booki.PersonalBook
 import com.example.booki.book_search.SearchViewModel
 import com.example.booki.Status
-import com.example.booki.data.PersonalBookCard
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalBookCard
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun PersonalBooksView(

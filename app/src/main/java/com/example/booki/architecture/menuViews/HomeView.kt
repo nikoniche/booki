@@ -29,11 +29,11 @@ import androidx.navigation.NavHostController
 import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
-import com.example.booki.data.PersonalBookCard
+import com.example.booki.personalData.PersonalBookCard
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.PersonalBook
 import com.example.booki.book_search.SearchViewModel
-import com.example.booki.data.PersonalRecordsViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun HomeView(
