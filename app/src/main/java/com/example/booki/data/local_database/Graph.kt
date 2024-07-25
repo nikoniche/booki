@@ -1,4 +1,4 @@
-package com.example.booki.local_database
+package com.example.booki.data.local_database
 
 import android.content.Context
 import android.database.sqlite.SQLiteException

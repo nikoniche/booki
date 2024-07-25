@@ -1,27 +1,19 @@
-package com.example.booki.book_details_views
+package com.example.booki.architecture.book_details_views
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.booki.Book
-import com.example.booki.SearchViewModel
-import com.example.booki.openLibraryAPI.OpenLibrary
-import com.example.booki.personalData.PersonalRecordsViewModel
+import com.example.booki.book_search.SearchViewModel
+import com.example.booki.data.PersonalRecordsViewModel
 
 @Composable
 fun BookDetailsView(

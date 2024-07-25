@@ -1,4 +1,4 @@
-package com.example.booki
+package com.example.booki.book_search
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -39,6 +39,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.booki.MyDivider
+import com.example.booki.MyHeadline
+import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 
 @Composable

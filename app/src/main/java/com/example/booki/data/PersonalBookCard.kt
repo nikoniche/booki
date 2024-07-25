@@ -1,4 +1,4 @@
-package com.example.booki.personalData
+package com.example.booki.data
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.PersonalBook
-import com.example.booki.SearchViewModel
+import com.example.booki.book_search.SearchViewModel
 
 @Composable
 fun PersonalBookCard(
@@ -47,12 +48,9 @@ fun PersonalBookCard(
             .wrapContentHeight()
             .padding(end = 9.dp)
             .clickable {
-                println("clicking personal book: ${personalBook.book.title}, ${personalBook.book.getISBN()}")
                 searchViewModel.fetchSearchResults(personalBook.book.getISBN() ?: "")
                 navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/${personalBook.book.getISBN()}")
             },
-        //elevation = 4.dp,
-        //border= BorderStroke(2.5.dp, Color.Black),
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -73,11 +71,13 @@ fun PersonalBookCard(
             val textSpacerHeight: Dp = 2.dp
             Text(
                 text=personalBook.book.title,
+                textAlign = TextAlign.Center,
                 fontWeight= FontWeight.SemiBold
             )
             Spacer(Modifier.height(textSpacerHeight))
             Text(
                 text=personalBook.book.getAuthors(),
+                textAlign = TextAlign.Center,
                 fontWeight= FontWeight.Light,
                 fontSize=12.sp
             )
@@ -86,6 +86,7 @@ fun PersonalBookCard(
                 Spacer(Modifier.height(textSpacerHeight))
                 Text(
                     text=personalBook.status.inText,
+                    textAlign = TextAlign.Center,
                     color=personalBook.status.color,
                 )
             }
@@ -94,6 +95,7 @@ fun PersonalBookCard(
                 Spacer(Modifier.height(textSpacerHeight))
                 Text(
                     text="${personalBook.readPages}/${personalBook.book.numberOfPages}",
+                    textAlign = TextAlign.Center,
                     color= Color.Gray,
                     fontSize=10.sp
                 )

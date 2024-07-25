@@ -1,4 +1,4 @@
-package com.example.booki.book_details_views
+package com.example.booki.architecture.book_details_views
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -45,7 +45,7 @@ import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
 import com.example.booki.Status
-import com.example.booki.personalData.PersonalRecordsViewModel
+import com.example.booki.data.PersonalRecordsViewModel
 
 @Composable
 fun BookView(

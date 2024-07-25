@@ -39,7 +39,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
-import com.example.booki.SearchViewModel
+import com.example.booki.book_search.SearchViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

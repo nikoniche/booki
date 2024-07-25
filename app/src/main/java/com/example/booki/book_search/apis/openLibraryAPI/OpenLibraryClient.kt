@@ -1,4 +1,4 @@
-package com.example.booki.openLibraryAPI
+package com.example.booki.book_search.apis.openLibraryAPI
 
 import OpenLibraryService
 import retrofit2.Retrofit

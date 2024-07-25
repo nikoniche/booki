@@ -1,4 +1,4 @@
-package com.example.booki.local_database
+package com.example.booki.data.local_database
 
 import com.example.booki.PersonalBook
 import kotlinx.coroutines.flow.Flow

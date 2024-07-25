@@ -1,4 +1,4 @@
-package com.example.booki.personalData
+package com.example.booki.architecture.menuViews
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -18,8 +18,10 @@ import com.example.booki.MyAppColumn
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.PersonalBook
-import com.example.booki.SearchViewModel
+import com.example.booki.book_search.SearchViewModel
 import com.example.booki.Status
+import com.example.booki.data.PersonalBookCard
+import com.example.booki.data.PersonalRecordsViewModel
 
 @Composable
 fun PersonalBooksView(

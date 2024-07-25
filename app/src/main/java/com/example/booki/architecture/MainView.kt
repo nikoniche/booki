@@ -13,11 +13,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.booki.architecture.navigation.NavigationManager
 import com.example.booki.architecture.navigation.Screen
-import com.example.booki.SearchViewModel
+import com.example.booki.book_search.SearchViewModel
 import com.example.booki.architecture.scaffold.BookiTopBar
 import com.example.booki.architecture.scaffold.DropdownNavigationMenu
 import com.example.booki.architecture.scaffold.ScaffoldViewModel
-import com.example.booki.personalData.PersonalRecordsViewModel
+import com.example.booki.data.PersonalRecordsViewModel
 
 @Composable
 fun MainView() {

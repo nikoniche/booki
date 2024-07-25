@@ -1,12 +1,12 @@
-package com.example.booki
+package com.example.booki.book_search
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.booki.openLibraryAPI.OpenLibrary
+import com.example.booki.Book
+import com.example.booki.book_search.apis.openLibraryAPI.OpenLibrary
 import kotlinx.coroutines.launch
-import java.lang.IndexOutOfBoundsException
 
 class SearchViewModel(
 
@@ -38,7 +38,7 @@ class SearchViewModel(
             viewModelScope.launch {
                 try {
                     _search.value = _search.value.copy(
-                        result=OpenLibrary.getBookByISBN(isbn = queryAsIsbnString),
+                        result= OpenLibrary.getBookByISBN(isbn = queryAsIsbnString),
                     )
                 } catch (e: Exception) {
                     // failed

@@ -1,12 +1,12 @@
-package com.example.booki.personalData
+package com.example.booki.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.booki.Book
 import com.example.booki.PersonalBook
 import com.example.booki.Status
-import com.example.booki.local_database.Graph
-import com.example.booki.local_database.PersonalBookRepository
+import com.example.booki.data.local_database.Graph
+import com.example.booki.data.local_database.PersonalBookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -72,7 +72,6 @@ class PersonalRecordsViewModel: ViewModel() {
 
     fun getBooks(status: Status?=null): List<PersonalBook> {
         // null status to allow for getting books of all types
-        println("getting all books inner ${books.toString()}")
         return if (status == null) books
         else {
             val matchingBooks: MutableList<PersonalBook> = mutableListOf()
