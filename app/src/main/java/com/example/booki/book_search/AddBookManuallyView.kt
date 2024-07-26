@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -48,7 +49,80 @@ import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.personalData.local_database.Graph
 
+data class TextFieldState(
+    val writtenState: MutableState<String> = mutableStateOf(""),
+    val onErrorMessage: MutableState<String> = mutableStateOf(""),
+    val validityCheck: (TextFieldState) -> Boolean,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PropertyTextField(
+    propertyName: String,
+    textFieldState: TextFieldState,
+    placeholderText: String="",
+    modifier: Modifier=Modifier,
+) {
+    Column(
+        modifier= modifier
+            .padding(vertical = 6.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(
+            text=propertyName,
+            fontSize=18.sp,
+            fontWeight= FontWeight.SemiBold,
+        )
+
+        val borderColor =
+            if(textFieldState.onErrorMessage.value != "") {
+                Color.Red
+            } else {
+                Color.Black
+            }
+
+        if(textFieldState.onErrorMessage.value != "") {
+            Text(
+                text = textFieldState.onErrorMessage.value,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
+        TextField(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+
+                cursorColor = Color.Black,
+                unfocusedPlaceholderColor=Color.Gray,
+
+                focusedIndicatorColor = Color.Black,
+                focusedTextColor = Color.Black,
+
+                unfocusedIndicatorColor = borderColor,
+                unfocusedTextColor = borderColor,
+            ),
+            placeholder = {
+                Text(
+                    text=placeholderText,
+                )
+            },
+            singleLine = true,
+            textStyle = TextStyle(color=Color.Black, fontSize = 16.sp),
+            value = textFieldState.writtenState.value,
+            onValueChange = {
+                textFieldState.writtenState.value = it
+            }
+        )
+    }
+
+}
+
 @Composable
 fun AddBookManuallyView(
     navHostController: NavHostController,
@@ -100,90 +174,71 @@ fun AddBookManuallyView(
 
         Spacer(Modifier.height(8.dp))
 
-        @Composable
-        fun PropertyTextField(
-            propertyName: String,
-            writtenState: MutableState<String>,
-            //onValueChange: (String) -> Unit,
-            placeholderText: String="",
-            isAloneInLine: Boolean=true,
-        ) {
-            val modifier = if(!isAloneInLine) Modifier.weight(1f) else Modifier
-
-            Column(
-                modifier= modifier
-                    .padding(vertical = 6.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Text(
-                    text=propertyName,
-                    fontSize=18.sp,
-                    fontWeight= FontWeight.SemiBold,
-                )
-                TextField(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White,
-                        unfocusedIndicatorColor = Color.Black,
-                        focusedIndicatorColor = Color.Black,
-                        cursorColor = Color.Black,
-                        unfocusedPlaceholderColor=Color.Gray,
-                    ),
-                    placeholder = {
-                        Text(
-                            text=placeholderText,
-                        )
-                    },
-                    singleLine = true,
-                    textStyle = TextStyle(color=Color.Black, fontSize = 16.sp),
-                    value = writtenState.value,
-                    onValueChange = {
-                        writtenState.value = it
-                    }
-                )
+        val titleState = TextFieldState() {
+            if (it.writtenState.value == "") {
+                it.onErrorMessage.value = "Field can't be empty"
+                false
+            } else true
+        }
+        val subtitleState = TextFieldState() {
+            true
+        }
+        val authorsState = TextFieldState() {
+            true
+        }
+        val numberOfPagesState = TextFieldState() {
+            val asInt = it.writtenState.value.toIntOrNull()
+            if (asInt == null) {
+                it.onErrorMessage.value = "Contains invalid characters"
+                false
+            } else if (asInt < 1) {
+                it.onErrorMessage.value = "Needs to be more than 0"
+                false
+            } else {
+                true
             }
-
+        }
+        val isbnState = TextFieldState() {
+            val trimmedIsbn = it.writtenState.value.replace("-", "").replace(" ", "").trim()
+            if (trimmedIsbn.length != 10 && trimmedIsbn.length != 13) {
+                it.onErrorMessage.value = "Not the correct length"
+                false
+            }
+            else {
+                if(trimmedIsbn.toLongOrNull() == null) {
+                    it.onErrorMessage.value = "Contains invalid characters"
+                    false
+                } else {
+                    true
+                }
+            }
+        }
+        val publisherState = TextFieldState() {
+            true
+        }
+        val publishedDateState = TextFieldState() {
+            // todo try to do some form of a date check, but otherwise field is optional
+            true
         }
 
-        val titleState = remember {
-            mutableStateOf("")
-        }
-        val subtitleState = remember {
-            mutableStateOf("")
-        }
-        val authorsState = remember {
-            mutableStateOf("")
-        }
-        val numberOfPagesState = remember {
-            mutableStateOf("")
-        }
-        val isbnState = remember {
-            mutableStateOf("")
-        }
-        val publisherState = remember {
-            mutableStateOf("")
-        }
-        val publishedDateState = remember {
-            mutableStateOf("")
-        }
+        val listOfTextFieldStates = listOf(
+            titleState, subtitleState, authorsState,
+            numberOfPagesState, isbnState, publisherState,
+            publishedDateState
+        )
 
         PropertyTextField(
             propertyName = "Title",
-            writtenState = titleState,
-
+            textFieldState = titleState,
         )
         PropertyTextField(
             propertyName = "Subtitle",
-            writtenState = subtitleState,
+            textFieldState = subtitleState,
         )
         PropertyTextField(
             propertyName = "Authors",
             placeholderText="seperate authors with a comma (Albert Camus, Franz Kafka)",
-            writtenState = authorsState,
+            textFieldState = authorsState,
         )
 
         Row(
@@ -194,14 +249,14 @@ fun AddBookManuallyView(
         ) {
             PropertyTextField(
                 propertyName = "Number of pages",
-                isAloneInLine = false,
-                writtenState = numberOfPagesState,
+                modifier = Modifier.weight(1f),
+                textFieldState = numberOfPagesState,
             )
             Spacer(Modifier.width(16.dp))
             PropertyTextField(
                 propertyName = "ISBN",
-                isAloneInLine = false,
-                writtenState = isbnState,
+                modifier = Modifier.weight(1f),
+                textFieldState = isbnState,
             )
         }
         Row(
@@ -212,14 +267,14 @@ fun AddBookManuallyView(
         ) {
             PropertyTextField(
                 propertyName = "Publisher",
-                isAloneInLine = false,
-                writtenState = publisherState,
+                modifier=Modifier.weight(1f),
+                textFieldState = publisherState,
             )
             Spacer(Modifier.width(16.dp))
             PropertyTextField(
                 propertyName = "Publish date",
-                isAloneInLine = false,
-                writtenState = publishedDateState,
+                modifier=Modifier.weight(1f),
+                textFieldState = publishedDateState,
             )
         }
 
@@ -251,34 +306,45 @@ fun AddBookManuallyView(
                 shape = ButtonDefaults.filledTonalShape,
                 contentPadding = PaddingValues(horizontal=12.dp, vertical=0.dp),
                 onClick={
-                    val trimmedIsbn = isbnState.value.replace("-", "").replace(" ", "").trim()
-                    var isbnType: String? = null
-                    when (trimmedIsbn.length) {
-                        10 -> isbnType = "isbn10"
-                        13 -> isbnType = "isbn13"
+                    var allFieldsPassedChecks = true
+                    listOfTextFieldStates.forEach {
+                        if (!it.validityCheck(it)) {
+                            allFieldsPassedChecks = false
+                        } else {
+                            it.onErrorMessage.value = ""
+                        }
                     }
 
-                    val userBook = Book(
-                        title=titleState.value,
-                        subtitle=subtitleState.value,
-                        authors=authorsState.value.split(",").map {
-                            it.trim()
-                        },
-                        numberOfPages = numberOfPagesState.value.toIntOrNull() ?: -2,
-                        isbn10 = if (isbnType == "isbn10") trimmedIsbn else "",
-                        isbn13 = if (isbnType == "isbn13") trimmedIsbn else "",
-                        publishDate = publishedDateState.value,
-                        publisher = publisherState.value,
+                    if (allFieldsPassedChecks) {
+                        val trimmedIsbn = isbnState.writtenState.value.replace("-", "").replace(" ", "").trim()
+                        var isbnType: String? = null
+                        when (trimmedIsbn.length) {
+                            10 -> isbnType = "isbn10"
+                            13 -> isbnType = "isbn13"
+                        }
 
-                        source="User",
-                    )
+                        val userBook = Book(
+                            title=titleState.writtenState.value,
+                            subtitle=subtitleState.writtenState.value,
+                            authors=authorsState.writtenState.value.split(",").map {
+                                it.trim()
+                            },
+                            numberOfPages = numberOfPagesState.writtenState.value.toIntOrNull() ?: -2,
+                            isbn10 = if (isbnType == "isbn10") trimmedIsbn else "",
+                            isbn13 = if (isbnType == "isbn13") trimmedIsbn else "",
+                            publishDate = publishedDateState.writtenState.value,
+                            publisher = publisherState.writtenState.value,
 
-                    userBookViewModel.addBook(userBook)
+                            source="User",
+                        )
 
-                    searchViewModel.fetchSearchResults(userBook.getISBN() ?: "")
-                    navHostController.navigate(
-                        Screen.BookDetailsScreen.route + "/isbn/${userBook.getISBN()}"
-                    )
+                        userBookViewModel.addBook(userBook)
+
+                        searchViewModel.fetchSearchResults(userBook.getISBN() ?: "")
+                        navHostController.navigate(
+                            Screen.BookDetailsScreen.route + "/isbn/${userBook.getISBN()}"
+                        )
+                    }
                 }
             ) {
                 Text(
@@ -294,9 +360,18 @@ fun AddBookManuallyView(
 @Preview(showBackground=true)
 @Composable
 fun AddBookManuallyViewPreview() {
-    AddBookManuallyView(
-        rememberNavController(),
-        searchViewModel = viewModel(),
-        userBookViewModel = viewModel(),
+//    AddBookManuallyView(
+//        rememberNavController(),
+//        searchViewModel = viewModel(),
+//        userBookViewModel = viewModel(),
+//    )
+
+    PropertyTextField(
+        propertyName = "Testing field",
+        textFieldState = TextFieldState(
+            remember {mutableStateOf("example value")},
+            remember {mutableStateOf("")},
+            {true}
+        ),
     )
 }
