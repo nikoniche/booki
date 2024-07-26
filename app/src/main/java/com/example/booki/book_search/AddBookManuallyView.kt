@@ -60,8 +60,8 @@ data class TextFieldState(
 fun PropertyTextField(
     propertyName: String,
     textFieldState: TextFieldState,
-    placeholderText: String="",
     modifier: Modifier=Modifier,
+    placeholderText: String="",
 ) {
     Column(
         modifier= modifier
