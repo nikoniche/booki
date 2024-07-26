@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.booki.Book
 import com.example.booki.book_search.apis.openLibraryAPI.OpenLibrary
 import com.example.booki.personalData.local_database.Graph
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel: ViewModel() {
@@ -44,7 +45,7 @@ class SearchViewModel: ViewModel() {
 
         if (searchByISBN) {
             // search by isbn
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
                     extendResultsList(
                         OpenLibrary.getBookByISBN(queryAsIsbnString)

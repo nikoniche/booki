@@ -64,11 +64,11 @@ fun DropdownNavigationMenu(
             scaffoldViewModel.menuOpened.value = false
         }
         NavigationItem(
-            name ="Account",
-            iconDrawable = R.drawable.ic_account
+            name ="Books created by me",
+            iconDrawable = R.drawable.ic_library_add
         ) {
             scaffoldViewModel.menuOpened.value = false
-            navHostController.navigate(Screen.AccountScreen.route)
+            navHostController.navigate(Screen.BooksCreatedByMeScreen.route)
         }
         NavigationItem(
             name ="Settings",

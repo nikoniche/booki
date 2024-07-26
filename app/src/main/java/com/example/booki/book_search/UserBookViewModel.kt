@@ -23,6 +23,10 @@ class UserBookViewModel: ViewModel() {
         }
     }
 
+    init {
+        fetchSavedBooks()
+    }
+
     fun addBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.addUserBook(book)

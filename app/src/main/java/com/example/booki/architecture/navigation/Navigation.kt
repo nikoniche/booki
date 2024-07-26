@@ -13,7 +13,7 @@ import com.example.booki.book_search.AddBookManuallyView
 import com.example.booki.book_search.SearchResultsView
 import com.example.booki.book_search.SearchViewModel
 import com.example.booki.architecture.book_details_views.BookDetailsView
-import com.example.booki.architecture.menuViews.AccountView
+import com.example.booki.architecture.menuViews.BooksCreatedByMeView
 import com.example.booki.architecture.menuViews.HomeView
 import com.example.booki.architecture.menuViews.PersonalBooksView
 import com.example.booki.book_search.UserBookViewModel
@@ -45,8 +45,10 @@ class NavigationManager(
             /*composable(Screen.AddScreen.route) {
                 AddView(navController=navHostController)
             }*/
-            composable(Screen.AccountScreen.route) {
-                AccountView()
+            composable(Screen.BooksCreatedByMeScreen.route) {
+                BooksCreatedByMeView(
+                    userBookViewModel=userBookViewModel,
+                )
             }
 
             composable(

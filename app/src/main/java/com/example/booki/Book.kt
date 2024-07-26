@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import com.google.gson.Gson
 
 class Book(
+    var id: Long=-1L, // for user books, do not need to care with API books
+
     var title: String="Unknown",
     var authors: List<String> = emptyList(),
     var numberOfPages: Int=-1,
@@ -48,7 +50,7 @@ class Book(
 }
 
 data class PersonalBook(
-    val id: Long=0L,
+    val id: Long=-1L,
     val book: Book,
     var status: Status = Status.PlanToRead,
     var readPages: Int=0,

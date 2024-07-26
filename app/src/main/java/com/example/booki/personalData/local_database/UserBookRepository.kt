@@ -9,9 +9,16 @@ class UserBookRepository(
     private val userBookDao: UserBookDao
 ) {
     private fun convertBookToUserBookEntity(book: Book): UserBookEntity {
-        return UserBookEntity(
-            bookString = Gson().toJson(book),
-        )
+        return if (book.id == -1L) {
+            UserBookEntity(
+                bookString = Gson().toJson(book),
+            )
+        } else {
+            UserBookEntity(
+                id=book.id,
+                bookString = Gson().toJson(book),
+            )
+        }
     }
     suspend fun addUserBook(book: Book){
         userBookDao.addUserBook(convertBookToUserBookEntity(book))
@@ -21,7 +28,9 @@ class UserBookRepository(
         val userBookEntities = userBookDao.getAllUserBooks().first()
         return userBookEntities.map {
             entity ->
-            Gson().fromJson(entity.bookString, Book::class.java)
+            val newBook = Gson().fromJson(entity.bookString, Book::class.java)
+            newBook.id = entity.id
+            newBook
         }
     }
 

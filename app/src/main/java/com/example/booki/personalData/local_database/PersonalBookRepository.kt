@@ -11,8 +11,7 @@ class PersonalBookRepository(
     private val personalBookDao: PersonalBookDao
 ) {
     private fun convertPersonalBookToEntity(personalBook: PersonalBook): PersonalBookEntity {
-        return PersonalBookEntity(
-            id=personalBook.id,
+        var personalBookEntity = PersonalBookEntity(
             bookString=personalBook.book.textify(),
             statusId=personalBook.status.id,
             pageProgress = personalBook.readPages,
@@ -20,6 +19,17 @@ class PersonalBookRepository(
             review=personalBook.review,
             bookNotes=personalBook.bookNotes,
         )
+
+        // mozna vyresilo to, ze neuklada spravne data
+        // protoze pri vytvoreni nove book, se podle me zapsalo defaultni id
+        // protoze se tim zabranilo aby se automaticky vytvorilo primaryKey
+        if (personalBook.id != -1L) {
+            personalBookEntity = personalBookEntity.copy(
+                id=personalBook.id
+            )
+        }
+
+        return personalBookEntity
     }
 
     suspend fun addPersonalBook(personalBook: PersonalBook){
