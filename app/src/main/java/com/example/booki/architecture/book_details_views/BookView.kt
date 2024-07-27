@@ -37,18 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
-import com.example.booki.R
 import com.example.booki.Status
 import com.example.booki.personalData.PersonalRecordsViewModel
 
@@ -103,7 +99,7 @@ fun BookView(
                 Text(
                     text="${book.numberOfPages} pages\n" +
                             "published: ${book.publishDate}\n" +
-                            "ISBN: ${book.getISBN() ?: "missing isbn"}",
+                            "ISBN: ${book.getISBN()}",
                     fontSize=13.sp,
                     color= Color.Gray
                 )
@@ -113,10 +109,9 @@ fun BookView(
                     color= Color.Gray
                 )
                 if(book.source == "User") {
-                    // bacha ze na tu knihu co jsem tam uz pridal tohle nefunguje, protoze u ty jsem nemel jeste source zadanej
                     IconButton(
                         onClick = {
-                            // todo trigger add manual view as edit user book view
+
                         }
                     ) {
                         Icon(
@@ -239,13 +234,4 @@ fun BookView(
             }
         }
     }
-}
-
-@Preview(showBackground=true)
-@Composable
-fun BookViewPreview() {
-    BookView(
-        book = Book(),
-        personalRecordsViewModel = viewModel(),
-    )
 }

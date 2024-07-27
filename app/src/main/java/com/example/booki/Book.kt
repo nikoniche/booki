@@ -21,13 +21,13 @@ class Book(
     val language: String="unknown language",
     val source: String="none", // OpenLibrary, User
 ) {
-    fun getISBN(): String? {
+    fun getISBN(): String {
         return if (isbn10 != "") {
             isbn10
         } else if (isbn13 != "") {
             isbn13
         } else {
-            null
+            ""
         }
     }
 

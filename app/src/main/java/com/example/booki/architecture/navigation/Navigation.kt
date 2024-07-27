@@ -47,6 +47,8 @@ class NavigationManager(
             }*/
             composable(Screen.BooksCreatedByMeScreen.route) {
                 BooksCreatedByMeView(
+                    navHostController=navHostController,
+                    searchViewModel=searchViewModel,
                     userBookViewModel=userBookViewModel,
                 )
             }

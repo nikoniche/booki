@@ -1,155 +1,52 @@
 package com.example.booki.book_search.apis.openLibraryAPI
 
-import OpenLibraryResponse
 import com.example.booki.Book
 import kotlinx.coroutines.coroutineScope
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.await
-import java.io.IOException
 
 object OpenLibrary {
 
-    suspend fun getBookByISBN(isbn: String): List<Book> {
-        val search = OpenLibraryClient.openLibraryService.getBookByISBN(isbn).await()
-        if (search.records == null) {
-            println("No result found.")
-            return emptyList()
+    suspend fun getBookByISBN(isbn: String): List<Book> = coroutineScope {
+        try {
+            val response = OpenLibraryClient.openLibraryService.getBookByISBN(isbn)
+            if (!response.isSuccessful) {
+                println("Error: ${response.code()} - ${response.message()}")
+                return@coroutineScope emptyList<Book>()
+            }
+
+            val search = response.body()
+            if (search?.records == null) {
+                println("No result found.")
+                return@coroutineScope emptyList<Book>()
+            }
+
+            val bookResults: List<Book> = search.records.map { entry ->
+                println(entry.value.data.title)
+                val bookData = entry.value.data
+
+                val isbn10 = bookData.identifiers.isbn_10?.firstOrNull() ?: ""
+                val isbn13 = bookData.identifiers.isbn_13?.firstOrNull() ?: ""
+                val coverUrl = bookData.cover?.large ?: "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
+                val subtitle = bookData.excerpts?.firstOrNull()?.text ?: ""
+
+                Book(
+                    title = bookData.title,
+                    authors = bookData.authors.map { it.name },
+                    numberOfPages = bookData.number_of_pages,
+                    publishDate = bookData.publish_date,
+                    isbn10 = isbn10,
+                    isbn13 = isbn13,
+                    coverUrl = coverUrl,
+                    subtitle = subtitle,
+                    publisher = bookData.publishers.firstOrNull()?.name ?: "",
+                    genres = bookData.subjects.map { it.name },
+                    source = "OpenLibrary",
+                )
+            }
+
+            return@coroutineScope bookResults
+        } catch (e: Exception) {
+
+            return@coroutineScope emptyList<Book>()
         }
-        val bookResults: List<Book> = search.records.map {
-            entry ->
-            val bookData = entry.value.data
-
-            lateinit var isbn10: String
-            if (bookData.identifiers.isbn_10 != null) {
-                isbn10 = bookData.identifiers.isbn_10.firstOrNull() ?: ""
-            } else {
-                isbn10 = ""
-            }
-            lateinit var isbn13: String
-            if (bookData.identifiers.isbn_13 != null) {
-                isbn13 = bookData.identifiers.isbn_13.firstOrNull() ?: ""
-            } else {
-                isbn13 = ""
-            }
-            lateinit var coverUrl: String
-            if (bookData.cover != null) {
-                coverUrl = bookData.cover.large
-            } else {
-                coverUrl =
-                    "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
-            }
-            lateinit var subtitle: String
-            if (bookData.excerpts != null) {
-                subtitle = bookData.excerpts[0].text
-            } else {
-                subtitle = ""
-            }
-
-            Book(
-                title = bookData.title,
-                authors = bookData.authors.map { it.name },
-                numberOfPages = bookData.number_of_pages,
-                publishDate = bookData.publish_date,
-                isbn10 = isbn10,
-                isbn13 = isbn13,
-                coverUrl = coverUrl,
-
-                subtitle = subtitle,
-                publisher = bookData.publishers[0].name,
-                genres = bookData.subjects.map {
-                    it.name
-                },
-                source="OpenLibrary",
-            )
-        }
-        return bookResults
     }
-    /*fun getBookByISBN(isbn: String, onResult: (Book?) -> Unit) {
-        val call = OpenLibraryClient.openLibraryService.getBookByISBN(isbn)
-
-        call.enqueue(object : Callback<OpenLibraryResponse> {
-            override fun onResponse(call: Call<OpenLibraryResponse>, response: Response<OpenLibraryResponse>) {
-                if (response.isSuccessful) {
-                    val post = response.body()
-
-                    println("Book was found.")
-
-                    if (post != null) {
-                        post.records.entries.forEach { entry ->
-                            val bookData = entry.value.data
-
-                            lateinit var isbn10: String
-                            if (bookData.identifiers.isbn_10 != null) {
-                                isbn10 = bookData.identifiers.isbn_10.firstOrNull() ?: ""
-                            } else {
-                                isbn10 = ""
-                            }
-                            lateinit var isbn13: String
-                            if (bookData.identifiers.isbn_13 != null) {
-                                isbn13 = bookData.identifiers.isbn_13.firstOrNull() ?: ""
-                            } else {
-                                isbn13 = ""
-                            }
-                            lateinit var coverUrl: String
-                            if (bookData.cover != null) {
-                                coverUrl = bookData.cover.large
-                            } else {
-                                coverUrl =
-                                    "https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png"
-                            }
-                            lateinit var subtitle: String
-                            if (bookData.excerpts != null) {
-                                subtitle = bookData.excerpts[0].text
-                            } else {
-                                subtitle = ""
-                            }
-
-                            val book = Book(
-                                title = bookData.title,
-                                authors = bookData.authors.map { it.name },
-                                numberOfPages = bookData.number_of_pages,
-                                publishDate = bookData.publish_date,
-                                isbn10 = isbn10,
-                                isbn13 = isbn13,
-                                coverUrl = coverUrl,
-
-                                subtitle = subtitle,
-                                publisher = bookData.publishers[0].name,
-                                genres = bookData.subjects.map {
-                                    it.name
-                                },
-                                source="OpenLibrary",
-                            )
-
-                            onResult(book)
-                        }
-                    }
-
-                    // Handle the retrieved post data
-                } else {
-                    println("Book not found")
-                    // Handle error
-                    try {
-                        val errorBody = response.errorBody()?.string()
-                        println("Error Code: ${response.code()}")
-                        println("Error Message: ${errorBody}")
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } finally {
-                        onResult(null)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<OpenLibraryResponse>, t: Throwable) {
-                println("Handling failure")
-                println(t.cause)
-                println(t.message)
-                onResult(null)
-                // Handle failure
-            }
-        })
-    }*/
 }
