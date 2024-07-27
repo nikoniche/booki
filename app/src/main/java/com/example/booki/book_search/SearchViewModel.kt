@@ -47,19 +47,15 @@ class SearchViewModel: ViewModel() {
             // search by isbn
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    println("Trying fetch by isbn")
                     extendResultsList(
                         OpenLibrary.getBookByISBN(queryAsIsbnString)
                     )
-                    println("Open library passed")
 
                     // search user books
                     val userBooks = userBookRepository.getUserBooks()
-                    println("user books: $userBooks")
 
                     val matchingUserBooks: MutableList<Book> = mutableListOf()
                     userBooks.forEach {
-                        println("Checking for book: ${it.title}, - isbn: ${it.getISBN()} X $queryAsIsbnString")
                         if (it.getISBN() == queryAsIsbnString) {
                             matchingUserBooks.add(it)
                         }
@@ -67,7 +63,6 @@ class SearchViewModel: ViewModel() {
                     extendResultsList(
                         matchingUserBooks
                     )
-                    println(matchingUserBooks)
                 } catch (e: Exception) {
                     // failed
                     _search.value = _search.value.copy(

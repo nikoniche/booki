@@ -57,12 +57,7 @@ fun BooksCreatedByMeView(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top,
                         modifier = Modifier.clickable {
-                            //println("deleting ${userBook.title}")
-                            //userBookViewModel.deleteBook(userBook)
                             val bookIsbn = userBook.getISBN()
-
-                            println("navigating to isbn $bookIsbn")
-
                             searchViewModel.fetchUserBook(userBook)
                             navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/$bookIsbn")
                         },
@@ -79,8 +74,6 @@ fun BooksCreatedByMeView(
                             fontSize=24.sp,
                             fontWeight = FontWeight.Bold,
                         )
-                        Text(text=userBook.id.toString())
-
                         Spacer(Modifier.height(16.dp))
                     }
                 }

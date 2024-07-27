@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.MyHeadline
 import com.example.booki.R
@@ -81,7 +82,7 @@ fun SearchResultsView(
                         ) {
                             Row {
                                 Image(
-                                    painter=painterResource(R.drawable.ic_image),
+                                    painter = rememberAsyncImagePainter(model = foundBook.coverUrl),
                                     contentDescription="cover of the book",
                                     contentScale = ContentScale.Fit,
                                     modifier = Modifier

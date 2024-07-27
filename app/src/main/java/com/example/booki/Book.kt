@@ -12,7 +12,7 @@ class Book(
     var publishDate: String="",
     var isbn10: String="",
     var isbn13: String="",
-    val coverUrl: String="https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png",
+    val coverUrl: String="https://lgimages.s3.amazonaws.com/nc-md.gif",
 
     var subtitle: String="",
     val description: String="",

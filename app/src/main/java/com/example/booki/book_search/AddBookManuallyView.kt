@@ -160,7 +160,7 @@ fun AddBookManuallyView(
                 }
             ) {
                 Image(
-                    painter=painterResource(R.drawable.nineteen_eighty_four), // todo make empty book cover image
+                    painter=painterResource(R.drawable.select_cover_image), // todo make empty book cover image
                     contentDescription = "select book cover button",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit,
