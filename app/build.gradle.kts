@@ -51,6 +51,10 @@ android {
 }
 
 dependencies {
+    implementation("androidx.activity:activity-ktx:1.3.1")
+    implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
     //Network Call
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 

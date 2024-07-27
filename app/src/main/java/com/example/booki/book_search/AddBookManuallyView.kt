@@ -1,7 +1,10 @@
 package com.example.booki.book_search
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,22 +28,31 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toIcon
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.example.booki.Book
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
+import kotlinx.coroutines.launch
+import com.example.booki.book_search.rememberImagePickerLauncher
 
 data class TextFieldState(
     val writtenState: MutableState<String> = mutableStateOf(""),
@@ -159,10 +171,33 @@ fun AddBookManuallyView(
                     // todo select book cover image
                 }
             ) {
+                val context = LocalContext.current
+                val scope = rememberCoroutineScope()
+                var imageUri by remember { mutableStateOf<Uri?>(null) }
+                var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+                val (launchGalleryPicker, launchCameraPicker) = rememberImagePickerLauncher(
+                    onImagePicked = { uri ->
+                        imageUri = uri
+                    },
+                    onCameraImageTaken = { bitmap ->
+                        imageBitmap = bitmap
+                        imageUri = getImageUri(context, bitmap)
+                    }
+                )
+
+                val painter =
+                    if (imageUri == null) painterResource(R.drawable.select_cover_image)
+                    else rememberImagePainter(imageUri)
                 Image(
-                    painter=painterResource(R.drawable.select_cover_image), // todo make empty book cover image
+                    painter=painter,
                     contentDescription = "select book cover button",
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable {
+                            launchGalleryPicker()
+                            println(imageUri.toString())
+                        },
                     contentScale = ContentScale.Fit,
                 )
             }
