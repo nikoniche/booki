@@ -65,7 +65,9 @@ class NavigationManager(
                 val bookIsbn: String? = if(entry.arguments != null) entry.arguments!!.getString("bookIsbn") else ""
                 BookDetailsView(
                     bookIsbn = bookIsbn?: "",
+                    navHostController=navHostController,
                     personalRecordsViewModel=personalRecordsViewModel,
+                    userBookViewModel=userBookViewModel,
                     searchViewModel=searchViewModel,
                 )
             }

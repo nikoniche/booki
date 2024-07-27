@@ -11,8 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PersonalRecordsViewModel: ViewModel() {
-    private val books: MutableList<PersonalBook> = mutableListOf(
-    )
+    private val books: MutableList<PersonalBook> = mutableListOf()
     private val personalBookRepository: PersonalBookRepository = Graph.personalBookRepository
 
     init {

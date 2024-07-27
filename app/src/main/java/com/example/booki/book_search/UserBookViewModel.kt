@@ -17,6 +17,9 @@ class UserBookViewModel: ViewModel() {
     private val _userBooks: MutableState<List<Book>> = mutableStateOf(emptyList())
     val userBooks: State<List<Book>> = _userBooks
 
+    private val _userBookToEdit: MutableState<Book?> = mutableStateOf(null)
+    val userBookToEdit: State<Book?> = _userBookToEdit
+
     private fun fetchSavedBooks() {
         viewModelScope.launch(Dispatchers.IO) {
             _userBooks.value = userBookRepository.getUserBooks()
@@ -46,5 +49,9 @@ class UserBookViewModel: ViewModel() {
             userBookRepository.deleteUserBook(book)
             fetchSavedBooks()
         }
+    }
+
+    fun triggerBookEdit(userBook: Book) {
+        _userBookToEdit.value = userBook
     }
 }

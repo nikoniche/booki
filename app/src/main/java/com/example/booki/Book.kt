@@ -6,20 +6,20 @@ import com.google.gson.Gson
 class Book(
     var id: Long=-1L, // for user books, do not need to care with API books
 
-    var title: String="Unknown",
+    var title: String,
     var authors: List<String> = emptyList(),
-    var numberOfPages: Int=-1,
-    var publishDate: String="1.1.2000",
+    var numberOfPages: Int,
+    var publishDate: String="",
     var isbn10: String="",
     var isbn13: String="",
     val coverUrl: String="https://developer.valvesoftware.com/w/images/thumb/b/ba/CSGOErrorTextures.png/200px-CSGOErrorTextures.png",
 
     var subtitle: String="",
     val description: String="",
-    var publisher: String="unknown publisher",
+    var publisher: String="",
     val genres: List<String> = emptyList(),
-    val language: String="unknown language",
-    val source: String="none", // OpenLibrary, User
+    val language: String="",
+    val source: String="", // OpenLibrary, User
 ) {
     fun getISBN(): String {
         return if (isbn10 != "") {

@@ -11,14 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.booki.Book
 import com.example.booki.book_search.SearchViewModel
+import com.example.booki.book_search.UserBookViewModel
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun BookDetailsView(
     bookIsbn: String,
+    navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
+    userBookViewModel: UserBookViewModel,
     searchViewModel: SearchViewModel,
 ) {
     if(!searchViewModel.search.value.searching) {
@@ -33,6 +37,8 @@ fun BookDetailsView(
             BookView(
                 book=foundBook as Book,
                 personalRecordsViewModel=personalRecordsViewModel,
+                navHostController = navHostController,
+                userBookViewModel=userBookViewModel,
             )
         } else {
             Box(

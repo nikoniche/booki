@@ -25,10 +25,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,16 +35,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.booki.Book
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
-import com.example.booki.personalData.local_database.Graph
 
 data class TextFieldState(
     val writtenState: MutableState<String> = mutableStateOf(""),
@@ -137,8 +130,11 @@ fun AddBookManuallyView(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
+        val pageTitle: String =
+            if (userBookViewModel.userBookToEdit.value == null) "Add book manually"
+            else "Edit: ${userBookViewModel.userBookToEdit.value!!.title}"
         Text(
-            text="Add book manually",
+            text=pageTitle,
             fontSize=21.sp,
             fontWeight= FontWeight.Bold,
             modifier=Modifier.padding(bottom=16.dp),
@@ -216,7 +212,7 @@ fun AddBookManuallyView(
         val publisherState = TextFieldState() {
             true
         }
-        val publishedDateState = TextFieldState() {
+        val publishDateState = TextFieldState() {
             // todo try to do some form of a date check, but otherwise field is optional
             true
         }
@@ -224,8 +220,19 @@ fun AddBookManuallyView(
         val listOfTextFieldStates = listOf(
             titleState, subtitleState, authorsState,
             numberOfPagesState, isbnState, publisherState,
-            publishedDateState
+            publishDateState
         )
+
+        // if editing book
+        if (userBookViewModel.userBookToEdit.value != null) {
+            titleState.writtenState.value = userBookViewModel.userBookToEdit.value!!.title
+            subtitleState.writtenState.value = userBookViewModel.userBookToEdit.value!!.subtitle
+            authorsState.writtenState.value = userBookViewModel.userBookToEdit.value!!.getAuthors()
+            numberOfPagesState.writtenState.value = userBookViewModel.userBookToEdit.value!!.numberOfPages.toString()
+            isbnState.writtenState.value = userBookViewModel.userBookToEdit.value!!.getISBN()
+            publisherState.writtenState.value = userBookViewModel.userBookToEdit.value!!.publisher
+            publishDateState.writtenState.value = userBookViewModel.userBookToEdit.value!!.publishDate
+        }
 
         PropertyTextField(
             propertyName = "Title",
@@ -274,7 +281,7 @@ fun AddBookManuallyView(
             PropertyTextField(
                 propertyName = "Publish date",
                 modifier=Modifier.weight(1f),
-                textFieldState = publishedDateState,
+                textFieldState = publishDateState,
             )
         }
 
@@ -323,7 +330,12 @@ fun AddBookManuallyView(
                             13 -> isbnType = "isbn13"
                         }
 
+                        val id =
+                            if (userBookViewModel.userBookToEdit.value == null) -1L
+                            else userBookViewModel.userBookToEdit.value!!.id
+
                         val userBook = Book(
+                            id=id,
                             title=titleState.writtenState.value,
                             subtitle=subtitleState.writtenState.value,
                             authors=authorsState.writtenState.value.split(",").map {
@@ -332,13 +344,17 @@ fun AddBookManuallyView(
                             numberOfPages = numberOfPagesState.writtenState.value.toIntOrNull() ?: -2,
                             isbn10 = if (isbnType == "isbn10") trimmedIsbn else "",
                             isbn13 = if (isbnType == "isbn13") trimmedIsbn else "",
-                            publishDate = publishedDateState.writtenState.value,
+                            publishDate = publishDateState.writtenState.value,
                             publisher = publisherState.writtenState.value,
 
                             source="User",
                         )
 
-                        userBookViewModel.addBook(userBook)
+                        if (userBookViewModel.userBookToEdit.value == null) {
+                            userBookViewModel.addBook(userBook)
+                        } else {
+                            userBookViewModel.updateBook(userBook)
+                        }
 
                         searchViewModel.fetchSearchResults(userBook.getISBN() ?: "")
                         navHostController.navigate(
@@ -347,31 +363,15 @@ fun AddBookManuallyView(
                     }
                 }
             ) {
+                val buttonText: String =
+                    if(userBookViewModel.userBookToEdit.value == null) "Add book"
+                    else "Edit book"
                 Text(
-                    text="Add book",
+                    text=buttonText,
                     color = Color.Black,
                     fontSize = 17.sp
                 )
             }
         }
     }
-}
-
-@Preview(showBackground=true)
-@Composable
-fun AddBookManuallyViewPreview() {
-//    AddBookManuallyView(
-//        rememberNavController(),
-//        searchViewModel = viewModel(),
-//        userBookViewModel = viewModel(),
-//    )
-
-    PropertyTextField(
-        propertyName = "Testing field",
-        textFieldState = TextFieldState(
-            remember {mutableStateOf("example value")},
-            remember {mutableStateOf("")},
-            {true}
-        ),
-    )
 }
