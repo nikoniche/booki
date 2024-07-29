@@ -1,5 +1,7 @@
 package com.example.booki.architecture.menuViews
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,16 +20,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.booki.MyHeadline
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.book_search.SearchViewModel
 import com.example.booki.book_search.UserBookViewModel
+import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun BooksCreatedByMeView(
@@ -60,10 +66,14 @@ fun BooksCreatedByMeView(
                             val bookIsbn = userBook.getISBN()
                             searchViewModel.fetchUserBook(userBook)
                             navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/$bookIsbn")
+//                              userBookViewModel.deleteBook(userBook)
                         },
                     ) {
+                        val painter =
+                            if (userBook.coverUrl != "") rememberAsyncImagePainter(Uri.parse(userBook.coverUrl))
+                            else (painterResource(id = R.drawable.select_cover_image))
                         Image(
-                            painter= painterResource(id = R.drawable.picture_of_dorian_gray),
+                            painter= painter,
                             contentDescription = "book title cover",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.width(85.dp),

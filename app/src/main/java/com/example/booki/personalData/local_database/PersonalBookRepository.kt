@@ -63,8 +63,6 @@ class PersonalBookRepository(
 
     suspend fun updatePersonalBook(personalBook: PersonalBook) {
         personalBookDao.updatePersonalBook(convertPersonalBookToEntity(personalBook))
-        println("updated books: ${getPersonalBooks()}")
-        println("books updated")
     }
 
     suspend fun deletePersonalBook(personalBook: PersonalBook) {

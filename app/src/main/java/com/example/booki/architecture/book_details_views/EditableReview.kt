@@ -130,18 +130,15 @@ fun EditableRating(
         order: Int,
         icon: @Composable () -> Unit,
     ) {
-        val density = LocalDensity.current.density
         Box(
             modifier = Modifier
                 .size(starSize)
-                .border(2.dp, Color.Gray)
+//                .border(2.dp, Color.Gray)
                 .pointerInput(Unit) {
                     detectTapGestures {
                             offset: Offset ->
 
                         val sizePx = starSize.toPx()
-                        val clickPosition = offset.x / density
-                        println("offset ${offset.x} vs size ${this.size.width / 2}")
                         newRating = order * 2
                         if (offset.x < sizePx / 2) {
                             newRating -= 1
@@ -151,12 +148,10 @@ fun EditableRating(
 
                         personalBook.rating = newRating
                         personalRecordsViewModel.updateBook(personalBook)
-                        println("Clicked order: $order -> newRating: $newRating")
                     }
 
                 }
         ) {
-            println(order)
             icon()
             Text(order.toString())
         }
@@ -166,9 +161,6 @@ fun EditableRating(
     val halfStar: Int = newRating.mod(2)
 
     Row {
-        println("generating row for rating: $newRating")
-        println("amount of full stars: $amountOfFullStars")
-        println("half star: $halfStar")
         for (i in 0 until amountOfFullStars) {
             HalfClickIconButton(
                 order=i+1,

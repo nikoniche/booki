@@ -83,6 +83,7 @@ class NavigationManager(
                 AddBookManuallyView(
                     navHostController=navHostController,
                     searchViewModel=searchViewModel,
+                    personalRecordsViewModel = personalRecordsViewModel,
                     userBookViewModel=userBookViewModel,
                 )
             }

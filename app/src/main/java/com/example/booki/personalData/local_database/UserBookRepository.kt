@@ -22,6 +22,7 @@ class UserBookRepository(
     }
     suspend fun addUserBook(book: Book){
         userBookDao.addUserBook(convertBookToUserBookEntity(book))
+        println("saving ${book.title} w ${book.coverUrl}")
     }
 
     suspend fun getUserBooks(): List<Book> {
@@ -30,6 +31,7 @@ class UserBookRepository(
             entity ->
             val newBook = Gson().fromJson(entity.bookString, Book::class.java)
             newBook.id = entity.id
+            println("loaded ${newBook.title} w ${newBook.coverUrl}")
             newBook
         }
     }

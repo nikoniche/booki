@@ -76,10 +76,9 @@ fun HomeView(
         }
         Spacer(Modifier.height(8.dp))
 
-        val books: List<PersonalBook> = personalRecordsViewModel.getBooks()
-        if (books.isNotEmpty()) {
+        if (personalRecordsViewModel.books.value.isNotEmpty()) {
             LazyRow {
-                items(books) {
+                items(personalRecordsViewModel.books.value) {
                         personalBook ->
                     PersonalBookCard(
                         personalBook,
@@ -88,6 +87,14 @@ fun HomeView(
                         navHostController=navHostController,
                         searchViewModel = searchViewModel,
                     )
+                    // dev for bugs
+//                    Button(
+//                        onClick={
+//                            personalRecordsViewModel.removeBook(personalBook)
+//                        }
+//                    ) {
+//                        Text("REMOVE")
+//                    }
                 }
             }
         } else {

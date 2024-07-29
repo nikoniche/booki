@@ -2,6 +2,7 @@ package com.example.booki.book_search
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
@@ -25,12 +26,29 @@ fun getImageUri(context: Context, bitmap: Bitmap): Uri {
     return Uri.parse(path)
 }
 
+fun isValidUri(context: Context, uri: Uri): Boolean {
+    return try {
+        context.contentResolver.openInputStream(uri)?.close()
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+fun triggerPersistentUriPermission(uri: Uri, context: Context) {
+    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    val resolver = context.contentResolver
+    resolver.takePersistableUriPermission(uri, flags)
+}
+
 @Composable
 fun rememberImagePickerLauncher(
     onImagePicked: (Uri) -> Unit,
     onCameraImageTaken: (Bitmap) -> Unit
 ): Pair<() -> Unit, () -> Unit> {
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         uri?.let {
             onImagePicked(it)
         }
@@ -44,30 +62,3 @@ fun rememberImagePickerLauncher(
 
     return Pair({ galleryLauncher.launch("image/*") }, { cameraLauncher.launch(null) })
 }
-//
-//@Composable
-//fun ImagePickerScreen() {
-//    val context = LocalContext.current
-//    val database = AppDatabase.getDatabase(context)
-//    val imageDao = database.imageDao()
-//    val scope = rememberCoroutineScope()
-//
-//    var imageUri by remember { mutableStateOf<Uri?>(null) }
-//    var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
-//
-//    val (launchGalleryPicker, launchCameraPicker) = rememberImagePickerLauncher(
-//        onImagePicked = { uri ->
-//            imageUri = uri
-//            scope.launch {
-//                imageDao.insertImage(ImageEntity(imageUri = uri.toString()))
-//            }
-//        },
-//        onCameraImageTaken = { bitmap ->
-//            imageBitmap = bitmap
-//            val uri = getImageUri(context, bitmap)
-//            scope.launch {
-//                imageDao.insertImage(ImageEntity(imageUri = uri.toString()))
-//            }
-//        }
-//    )
-//}

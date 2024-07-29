@@ -1,5 +1,6 @@
 package com.example.booki.architecture.book_details_views
 
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -55,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
@@ -227,8 +229,11 @@ fun GenericBookData(
         modifier = Modifier.wrapContentSize().fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        val painter =
+            if(book.source == "User") rememberAsyncImagePainter(Uri.parse(book.coverUrl)) // user books have a Uri in string format as coverUrl
+            else rememberAsyncImagePainter(model = book.coverUrl) // api books with a cover online
         Image(
-            painter = rememberAsyncImagePainter(model = book.coverUrl),
+            painter = painter,
 //            painter=painterResource(R.drawable.nineteen_eighty_four),
             contentDescription = "book cover",
             contentScale = ContentScale.Fit,

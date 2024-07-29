@@ -1,5 +1,7 @@
 package com.example.booki.book_search
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
@@ -19,9 +21,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -47,12 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toIcon
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.booki.Book
+import com.example.booki.PersonalBook
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 import kotlinx.coroutines.launch
 import com.example.booki.book_search.rememberImagePickerLauncher
+import com.example.booki.personalData.PersonalRecordsViewModel
+
 
 data class TextFieldState(
     val writtenState: MutableState<String> = mutableStateOf(""),
@@ -125,12 +135,12 @@ fun PropertyTextField(
             }
         )
     }
-
 }
 
 @Composable
 fun AddBookManuallyView(
     navHostController: NavHostController,
+    personalRecordsViewModel: PersonalRecordsViewModel,
     searchViewModel: SearchViewModel,
     userBookViewModel: UserBookViewModel,
 ) {
@@ -145,6 +155,28 @@ fun AddBookManuallyView(
         val pageTitle: String =
             if (userBookViewModel.userBookToEdit.value == null) "Add book manually"
             else "Edit: ${userBookViewModel.userBookToEdit.value!!.title}"
+
+        var imageUri by remember {
+            mutableStateOf(
+                if (userBookViewModel.userBookToEdit.value == null) null
+                else Uri.parse(userBookViewModel.userBookToEdit.value!!.coverUrl)
+            )
+        }
+
+        var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+        val context = LocalContext.current
+        val (launchGalleryPicker, launchCameraPicker) = rememberImagePickerLauncher(
+            onImagePicked = { uri ->
+                imageUri = uri
+                triggerPersistentUriPermission(imageUri!!, context)
+            },
+            onCameraImageTaken = { bitmap ->
+                imageBitmap = bitmap
+                imageUri = getImageUri(context, bitmap)
+                triggerPersistentUriPermission(imageUri!!, context)
+            }
+        )
+
         Text(
             text=pageTitle,
             fontSize=21.sp,
@@ -168,36 +200,18 @@ fun AddBookManuallyView(
 
                     ),
                 onClick = {
-                    // todo select book cover image
+                    launchGalleryPicker()
+                    println(imageUri.toString())
                 }
             ) {
-                val context = LocalContext.current
-                val scope = rememberCoroutineScope()
-                var imageUri by remember { mutableStateOf<Uri?>(null) }
-                var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
-
-                val (launchGalleryPicker, launchCameraPicker) = rememberImagePickerLauncher(
-                    onImagePicked = { uri ->
-                        imageUri = uri
-                    },
-                    onCameraImageTaken = { bitmap ->
-                        imageBitmap = bitmap
-                        imageUri = getImageUri(context, bitmap)
-                    }
-                )
-
                 val painter =
                     if (imageUri == null) painterResource(R.drawable.select_cover_image)
-                    else rememberImagePainter(imageUri)
+                    else rememberAsyncImagePainter(imageUri)
                 Image(
                     painter=painter,
                     contentDescription = "select book cover button",
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clickable {
-                            launchGalleryPicker()
-                            println(imageUri.toString())
-                        },
+                        .fillMaxSize(),
                     contentScale = ContentScale.Fit,
                 )
             }
@@ -337,6 +351,26 @@ fun AddBookManuallyView(
                 fontSize=14.sp,
                 modifier=Modifier.width(200.dp),
             )
+
+            if(userBookViewModel.userBookToEdit.value != null) {
+                IconButton(
+                    onClick={
+                        val personalBook: PersonalBook? = personalRecordsViewModel
+                            .getPersonalBookByBook(userBookViewModel.userBookToEdit.value!!)
+                        if (personalBook != null) {
+                            personalRecordsViewModel.removeBook(personalBook)
+                        }
+                        userBookViewModel.deleteBook(userBookViewModel.userBookToEdit.value!!)
+                        navHostController.navigate(Screen.BooksCreatedByMeScreen.route)
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "delete book",
+                    )
+                }
+            }
+
             Button(
                 colors = ButtonDefaults
                     .buttonColors(
@@ -382,16 +416,28 @@ fun AddBookManuallyView(
                             publishDate = publishDateState.writtenState.value,
                             publisher = publisherState.writtenState.value,
 
+                            coverUrl = imageUri.toString(),
+
                             source="User",
                         )
 
                         if (userBookViewModel.userBookToEdit.value == null) {
                             userBookViewModel.addBook(userBook)
                         } else {
+                            val personalBook: PersonalBook? = personalRecordsViewModel
+                                .getPersonalBookByBook(userBookViewModel.userBookToEdit.value!!)
+                            if (personalBook != null) {
+                                personalRecordsViewModel.updateBook(
+                                    personalBook.copy(
+                                        book=userBook
+                                    )
+                                )
+                            }
+
                             userBookViewModel.updateBook(userBook)
                         }
 
-                        searchViewModel.fetchSearchResults(userBook.getISBN() ?: "")
+                        searchViewModel.fetchSearchResults(userBook.getISBN())
                         navHostController.navigate(
                             Screen.BookDetailsScreen.route + "/isbn/${userBook.getISBN()}"
                         )
