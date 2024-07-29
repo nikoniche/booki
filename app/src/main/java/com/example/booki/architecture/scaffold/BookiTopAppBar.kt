@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.booki.BarcodeScanner
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.book_search.SearchViewModel
@@ -79,7 +81,7 @@ fun BookiTopBar(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     var searchQuery by remember {
-                        mutableStateOf("9788074830587")
+                        mutableStateOf("")
                     }
                     val verticalScrollState = rememberScrollState()
                     val coroutineScope = rememberCoroutineScope()
@@ -111,6 +113,8 @@ fun BookiTopBar(
                             innerTextField()
                         }
                     )
+
+                    val barcodeScanner = BarcodeScanner(LocalContext.current)
                     Row {
                         if(searchQuery.isNotEmpty()) {
                             IconButton(
@@ -129,7 +133,14 @@ fun BookiTopBar(
                         }
                         IconButton(
                             onClick={
-
+                                coroutineScope.launch {
+                                    barcodeScanner.startScan()
+                                    if (barcodeScanner.barCodeResults.value != null) {
+                                        searchQuery = barcodeScanner.barCodeResults.value.toString()
+                                        navHostController.navigate(Screen.SearchResultsScreen.route)
+                                        searchViewModel.fetchSearchResults(searchQuery)
+                                    }
+                                }
                             }
                         ) {
                             Icon(

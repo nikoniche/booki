@@ -51,9 +51,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.activity:activity-ktx:1.3.1")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    // GOOGLE BARCODE SCANNER
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
 
     //Network Call
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -70,13 +70,17 @@ dependencies {
         implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // IMAGES
-        implementation("com.google.accompanist:accompanist-drawablepainter:0.28.0")
-        implementation("io.coil-kt:coil-compose:2.1.0") // load an image from URL
+    implementation("com.google.accompanist:accompanist-drawablepainter:0.28.0")
+    implementation("io.coil-kt:coil-compose:2.1.0") // load an image from URL
+
+    implementation("androidx.activity:activity-ktx:1.3.1")
+    implementation("androidx.activity:activity-compose:1.3.1")
+//    implementation("io.coil-kt:coil-compose:1.3.2")
 
     // ALPHA UI
-        implementation("androidx.compose.ui:ui:1.6.0-alpha08")
-        implementation("androidx.compose.material:material:1.6.0-alpha08")
-        implementation("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
+    implementation("androidx.compose.ui:ui:1.6.0-alpha08")
+    implementation("androidx.compose.material:material:1.6.0-alpha08")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
 
     // ROOM LOCAL DATABASE
     val room = "2.6.0"
