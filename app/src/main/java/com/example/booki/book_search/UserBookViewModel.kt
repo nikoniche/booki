@@ -23,6 +23,15 @@ class UserBookViewModel: ViewModel() {
     private fun fetchSavedBooks() {
         viewModelScope.launch(Dispatchers.IO) {
             _userBooks.value = userBookRepository.getUserBooks()
+
+            // check if userBookToEdit still exists
+            var foundEditBook = false
+            _userBooks.value.forEach {
+                if (it == _userBookToEdit.value) foundEditBook = true
+            }
+            if (!foundEditBook) {
+                _userBookToEdit.value = null
+            }
         }
     }
 

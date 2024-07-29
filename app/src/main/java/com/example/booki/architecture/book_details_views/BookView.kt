@@ -76,8 +76,6 @@ fun BookView(
     ) {
         GenericBookData(
             book=book,
-//            navHostController = navHostController,
-//            userBookViewModel=userBookViewModel,
         )
 
         MyDivider(Modifier.padding(vertical=8.dp))
@@ -170,32 +168,38 @@ fun BookView(
                 }
 
                 if (personalRecordsViewModel.viewedPersonalBook.value != null) {
-                    if(bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
+                    if (bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                         EditableReadPages(
                             personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
                             personalRecordsViewModel = personalRecordsViewModel,
                         )
                     }
-                    Row(
-                        modifier=Modifier.wrapContentSize(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        if(book.source == "User") {
-                            IconButton(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .padding(end = 8.dp),
-                                onClick = {
-                                    userBookViewModel.triggerBookEdit(book)
-                                    navHostController.navigate(Screen.AddBookManuallyScreen.route)
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "edit user book button",
-                                )
+                }
+                Row(
+                    modifier=Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+
+                    // navigation button to update screen for user created books
+                    if(book.source == "User") {
+                        IconButton(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(end = 8.dp),
+                            onClick = {
+                                userBookViewModel.triggerBookEdit(book)
+                                navHostController.navigate(Screen.AddBookManuallyScreen.route)
                             }
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "edit user book button",
+                            )
                         }
+                    }
+
+                    // deleting a book from personal books
+                    if (personalRecordsViewModel.viewedPersonalBook.value != null) {
                         if(bookStatusState != null) {
                             IconButton(
                                 onClick={
@@ -233,26 +237,23 @@ fun BookView(
 @Composable
 fun GenericBookData(
     book: Book,
-//    navHostController: NavHostController,
-//    userBookViewModel: UserBookViewModel,
 ) {
     // universal slash public book data
     Column(
-        modifier = Modifier.wrapContentSize().fillMaxWidth(),
+        modifier = Modifier
+            .wrapContentSize()
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val painter =
-            if(book.source == "User") rememberAsyncImagePainter(Uri.parse(book.coverUrl)) // user books have a Uri in string format as coverUrl
-            else rememberAsyncImagePainter(model = book.coverUrl) // api books with a cover online
         Image(
-            painter = painter,
+            painter = book.getCoverPainter(),
 //            painter=painterResource(R.drawable.nineteen_eighty_four),
             contentDescription = "book cover",
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .padding(vertical=8.dp),
+                .padding(vertical = 8.dp),
         )
 
         Text(

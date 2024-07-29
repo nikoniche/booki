@@ -1,6 +1,10 @@
 package com.example.booki
 
+import android.net.Uri
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import coil.compose.rememberAsyncImagePainter
 import com.google.gson.Gson
 
 class Book(
@@ -12,7 +16,7 @@ class Book(
     var publishDate: String="",
     var isbn10: String="",
     var isbn13: String="",
-    val coverUrl: String="https://lgimages.s3.amazonaws.com/nc-md.gif",
+    val coverUrl: String="",
 
     var subtitle: String="",
     val description: String="",
@@ -45,6 +49,19 @@ class Book(
         }
         catch (e: Exception) {
             return "AUTHOR ERROR"
+        }
+    }
+
+    @Composable
+    fun getCoverPainter(): Painter {
+        return if (this.coverUrl == "") {
+            rememberAsyncImagePainter(model = "https://lgimages.s3.amazonaws.com/nc-md.gif")
+        } else {
+            if (this.source == "User") {
+                rememberAsyncImagePainter(model = Uri.parse(this.coverUrl))
+            } else {
+                rememberAsyncImagePainter(model = this.coverUrl)
+            }
         }
     }
 }

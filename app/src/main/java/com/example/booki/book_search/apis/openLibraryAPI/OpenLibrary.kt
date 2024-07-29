@@ -25,7 +25,7 @@ object OpenLibrary {
 
                 val isbn10 = bookData.identifiers.isbn_10?.firstOrNull() ?: ""
                 val isbn13 = bookData.identifiers.isbn_13?.firstOrNull() ?: ""
-                val coverUrl = bookData.cover?.large ?: "https://lgimages.s3.amazonaws.com/nc-md.gif"
+                val coverUrl = bookData.cover?.large ?: ""
                 val subtitle = bookData.excerpts?.firstOrNull()?.text ?: ""
 
                 Book(

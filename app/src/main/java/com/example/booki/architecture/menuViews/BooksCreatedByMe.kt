@@ -63,15 +63,11 @@ fun BooksCreatedByMeView(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top,
                         modifier = Modifier.clickable {
-                            val bookIsbn = userBook.getISBN()
-                            searchViewModel.fetchUserBook(userBook)
-                            navHostController.navigate(Screen.BookDetailsScreen.route + "/isbn/$bookIsbn")
-//                              userBookViewModel.deleteBook(userBook)
+                            userBookViewModel.triggerBookEdit(userBook)
+                            navHostController.navigate(Screen.AddBookManuallyScreen.route)
                         },
                     ) {
-                        val painter =
-                            if (userBook.coverUrl != "") rememberAsyncImagePainter(Uri.parse(userBook.coverUrl))
-                            else (painterResource(id = R.drawable.select_cover_image))
+                        val painter = userBook.getCoverPainter()
                         Image(
                             painter= painter,
                             contentDescription = "book title cover",

@@ -60,7 +60,7 @@ fun PersonalBookCard(
                 .padding(horizontal = 6.dp, vertical = 10.dp)
         ) {
             Image(
-                painter = rememberAsyncImagePainter(model = personalBook.book.coverUrl),
+                painter = personalBook.book.getCoverPainter(),
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
