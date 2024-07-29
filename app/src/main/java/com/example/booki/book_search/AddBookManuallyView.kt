@@ -1,12 +1,9 @@
 package com.example.booki.book_search
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,7 +34,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,16 +47,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toIcon
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.booki.Book
 import com.example.booki.PersonalBook
 import com.example.booki.R
 import com.example.booki.architecture.navigation.Screen
-import kotlinx.coroutines.launch
-import com.example.booki.book_search.rememberImagePickerLauncher
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 
@@ -355,10 +347,9 @@ fun AddBookManuallyView(
             if(userBookViewModel.userBookToEdit.value != null) {
                 IconButton(
                     onClick={
-                        val personalBook: PersonalBook? = personalRecordsViewModel
-                            .getPersonalBookByBook(userBookViewModel.userBookToEdit.value!!)
-                        if (personalBook != null) {
-                            personalRecordsViewModel.removeBook(personalBook)
+                        personalRecordsViewModel.setViewedBookByBook(userBookViewModel.userBookToEdit.value!!)
+                        if (personalRecordsViewModel.viewedPersonalBook.value != null) {
+                            personalRecordsViewModel.removeBook(personalRecordsViewModel.viewedPersonalBook.value!!)
                         }
                         userBookViewModel.deleteBook(userBookViewModel.userBookToEdit.value!!)
                         navHostController.navigate(Screen.BooksCreatedByMeScreen.route)
@@ -424,11 +415,10 @@ fun AddBookManuallyView(
                         if (userBookViewModel.userBookToEdit.value == null) {
                             userBookViewModel.addBook(userBook)
                         } else {
-                            val personalBook: PersonalBook? = personalRecordsViewModel
-                                .getPersonalBookByBook(userBookViewModel.userBookToEdit.value!!)
-                            if (personalBook != null) {
+                            personalRecordsViewModel.setViewedBookByBook(userBookViewModel.userBookToEdit.value!!)
+                            if (personalRecordsViewModel.viewedPersonalBook.value != null) {
                                 personalRecordsViewModel.updateBook(
-                                    personalBook.copy(
+                                    personalRecordsViewModel.viewedPersonalBook.value!!.copy(
                                         book=userBook
                                     )
                                 )

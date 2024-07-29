@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -41,12 +39,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,11 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
-import com.example.booki.R
 import com.example.booki.Status
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.book_search.UserBookViewModel
@@ -88,18 +82,17 @@ fun BookView(
 
         MyDivider(Modifier.padding(vertical=8.dp))
 
+        personalRecordsViewModel.setViewedBookByBook(book)
+        var bookStatusState by remember {
+            mutableStateOf(personalRecordsViewModel.viewedPersonalBook.value?.status) // null status state means
+            // that its not added to users personal books
+        }
+
         // personal data
         Column(
             modifier = Modifier.fillMaxSize()
         )
         {
-            val personalBook: PersonalBook? = personalRecordsViewModel.getPersonalBookByBook(book)
-
-            var bookStatusState by remember {
-                mutableStateOf(personalBook?.status) // null status state means
-                // that its not added to users personal books
-            }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -148,9 +141,24 @@ fun BookView(
                                     Text(status.inText, color=status.color)
                                 },
                                 onClick = {
+                                    if (personalRecordsViewModel.viewedPersonalBook.value == null) {
+                                        personalRecordsViewModel.addBook(
+                                            PersonalBook(
+                                                book=book,
+                                                status =status as Status // assuming we arent trying to delete non-existent book
+                                            )
+                                        )
+                                    } else {
+                                        when (status) {
+                                            null -> personalRecordsViewModel.removeBook(
+                                                personalRecordsViewModel.viewedPersonalBook.value!!
+                                            )
+                                            else -> personalRecordsViewModel.viewedPersonalBook.value!!.status = status
+                                        }
+                                        personalRecordsViewModel.updateBook(personalRecordsViewModel.viewedPersonalBook.value!!)
+                                    }
                                     bookStatusState = status
                                     dropDownMenuExpandedState = false
-                                    personalRecordsViewModel.changeBookStatus(book, status)
                                 }
                             )
                         }
@@ -161,58 +169,62 @@ fun BookView(
                     }
                 }
 
-                if(bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
-                    EditableReadPages(
-                        personalBook = personalBook as PersonalBook,
+                if (personalRecordsViewModel.viewedPersonalBook.value != null) {
+                    if(bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
+                        EditableReadPages(
+                            personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
+                            personalRecordsViewModel = personalRecordsViewModel,
+                        )
+                    }
+                    Row(
+                        modifier=Modifier.wrapContentSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        if(book.source == "User") {
+                            IconButton(
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                    .padding(end = 8.dp),
+                                onClick = {
+                                    userBookViewModel.triggerBookEdit(book)
+                                    navHostController.navigate(Screen.AddBookManuallyScreen.route)
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Edit,
+                                    contentDescription = "edit user book button",
+                                )
+                            }
+                        }
+                        if(bookStatusState != null) {
+                            IconButton(
+                                onClick={
+                                    personalRecordsViewModel.removeBook(personalRecordsViewModel.viewedPersonalBook.value!!)
+                                    bookStatusState = null
+                                }
+                            ) {
+                                Icon(Icons.Default.Delete, "delete button")
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (personalRecordsViewModel.viewedPersonalBook.value != null) {
+                if(bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
+                    EditableReview(
+                        personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
+                        personalRecordsViewModel = personalRecordsViewModel
+                    )
+                }
+
+                if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
+                    Spacer(Modifier.height(12.dp))
+                    EditableBookNotes(
+                        personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
                         personalRecordsViewModel = personalRecordsViewModel,
                     )
                 }
-                Row(
-                    modifier=Modifier.wrapContentSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    if(book.source == "User") {
-                        IconButton(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(end = 8.dp),
-                            onClick = {
-                                userBookViewModel.triggerBookEdit(book)
-                                navHostController.navigate(Screen.AddBookManuallyScreen.route)
-                            }
-                        ) {
-                            Icon(
-                                Icons.Default.Edit,
-                                contentDescription = "edit user book button",
-                            )
-                        }
-                    }
-                    if(bookStatusState != null) {
-                        IconButton(
-                            onClick={
-                                personalRecordsViewModel.removeBook(personalBook as PersonalBook)
-                                bookStatusState = null
-                            }
-                        ) {
-                            Icon(Icons.Default.Delete, "delete button")
-                        }
-                    }
-                }
-            }
-
-            if(bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
-                EditableReview(
-                    personalBook = personalBook as PersonalBook,
-                    personalRecordsViewModel = personalRecordsViewModel
-                )
-            }
-
-            if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
-                Spacer(Modifier.height(12.dp))
-                EditableBookNotes(
-                    personalBook = personalBook as PersonalBook,
-                    personalRecordsViewModel = personalRecordsViewModel,
-                )
             }
         }
     }

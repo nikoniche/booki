@@ -19,6 +19,8 @@ class PersonalRecordsViewModel: ViewModel() {
     private val _books: MutableState<List<PersonalBook>> = mutableStateOf( emptyList() )
     val books: State<List<PersonalBook>> = _books
 
+    val viewedPersonalBook: MutableState<PersonalBook?> = mutableStateOf(null)
+
     init {
         refreshBooks()
     }
@@ -27,6 +29,15 @@ class PersonalRecordsViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val listOfSavedBooks = personalBookRepository.getPersonalBooks()
             _books.value = listOfSavedBooks
+
+            // check if viewedPersonalBook still exists
+            var foundViewedBook = false
+            _books.value.forEach {
+                if (it.equals(viewedPersonalBook.value)) foundViewedBook = true
+            }
+            if (!foundViewedBook) {
+                viewedPersonalBook.value = null
+            }
         }
     }
 
@@ -51,29 +62,12 @@ class PersonalRecordsViewModel: ViewModel() {
         }
     }
 
-    fun getPersonalBookByBook(book: Book): PersonalBook? {
+    fun setViewedBookByBook(book: Book) {
         _books.value.forEach {
             personalBook ->
-            if (personalBook.book.id == book.id) {
-                return personalBook
+            if (personalBook.book.getISBN() == book.getISBN()) {
+                viewedPersonalBook.value = personalBook
             }
-        }
-        return null
-    }
-    fun changeBookStatus(book: Book, status: Status?) {
-        var personalBook: PersonalBook? = getPersonalBookByBook(book)
-        if (personalBook == null) {
-            personalBook = PersonalBook(
-                book=book,
-                status =status as Status // assuming we arent trying to delete non-existent book
-            )
-            addBook(personalBook)
-        } else {
-            when (status) {
-                null -> removeBook(personalBook)
-                else -> personalBook.status = status
-            }
-            updateBook(personalBook)
         }
     }
 
