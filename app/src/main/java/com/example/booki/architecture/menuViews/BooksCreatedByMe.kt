@@ -76,7 +76,9 @@ fun BooksCreatedByMeView(
                             painter= painter,
                             contentDescription = "book title cover",
                             contentScale = ContentScale.Fit,
-                            modifier = Modifier.width(85.dp),
+                            modifier = Modifier
+                                .width(90.dp)
+                                .height(110.dp),
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
