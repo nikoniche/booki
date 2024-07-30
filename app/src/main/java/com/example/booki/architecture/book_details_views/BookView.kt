@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +56,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.booki.MyDivider
 import com.example.booki.Book
 import com.example.booki.PersonalBook
+import com.example.booki.R
 import com.example.booki.Status
 import com.example.booki.architecture.navigation.Screen
 import com.example.booki.book_search.UserBookViewModel
@@ -143,7 +145,7 @@ fun BookView(
                                         personalRecordsViewModel.addBook(
                                             PersonalBook(
                                                 book=book,
-                                                status =status as Status // assuming we arent trying to delete non-existent book
+                                                status =status // assuming we arent trying to delete non-existent book
                                             )
                                         )
                                     } else {
@@ -251,8 +253,8 @@ fun GenericBookData(
             contentDescription = "book cover",
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .fillMaxWidth()
                 .height(200.dp)
+                .width(150.dp)
                 .padding(vertical = 8.dp),
         )
 
@@ -281,42 +283,42 @@ fun GenericBookData(
                 "ISBN: ${book.getISBN()}\n" +
                 (if (book.publisher != "") "publisher: ${book.publisher}\n" else "") +
                 (if (book.publishDate != "") "published: ${book.publishDate}\n" else "") +
-                if (book.language != "") "language: ${book.language}\n" else ""
+                (if (book.language != "") "language: ${book.language}\n" else "")
         Text(
             text=detailsText,
             fontSize=13.sp,
             color= Color.Gray
         )
 
-        if (book.genres.isNotEmpty()) {
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                columns = GridCells.Fixed(4),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),  // Space between columns
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp)
-            ) {
-                items(book.genres) {
-                    Box(
-                        modifier = Modifier
-                            .border(1.dp, Color.Black, RoundedCornerShape(5.dp))
-                            .height(20.dp)
-                            .width(40.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text=it,
-                            fontWeight = FontWeight.Light,
-                            fontSize = 13.sp,
-                            maxLines = 1,                             // Ensure text does not wrap to the next line
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
-            }
-        }
+//        if (book.genres.isNotEmpty()) {
+//            LazyVerticalGrid(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(50.dp),
+//                columns = GridCells.Fixed(4),
+//                horizontalArrangement = Arrangement.spacedBy(4.dp),  // Space between columns
+//                verticalArrangement = Arrangement.spacedBy(4.dp),
+//                contentPadding = PaddingValues(horizontal = 8.dp)
+//            ) {
+//                items(book.genres) {
+//                    Box(
+//                        modifier = Modifier
+//                            .border(1.dp, Color.Black, RoundedCornerShape(5.dp))
+//                            .height(20.dp)
+//                            .width(40.dp),
+//                        contentAlignment = Alignment.Center,
+//                    ) {
+//                        Text(
+//                            text=it,
+//                            fontWeight = FontWeight.Light,
+//                            fontSize = 13.sp,
+//                            maxLines = 1,                             // Ensure text does not wrap to the next line
+//                            overflow = TextOverflow.Ellipsis,
+//                        )
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.booki.Book
-import com.example.booki.book_search.apis.openLibraryAPI.OpenLibrary
+import com.example.booki.book_search.apis.googlebooks.GoogleBooks
+import com.example.booki.book_search.apis.openLibrary.OpenLibrary
 import com.example.booki.personalData.local_database.Graph
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +50,10 @@ class SearchViewModel: ViewModel() {
                 try {
                     extendResultsList(
                         OpenLibrary.getBookByISBN(queryAsIsbnString)
+                    )
+
+                    extendResultsList(
+                        GoogleBooks.getBookByISBN(queryAsIsbnString)
                     )
 
                     // search user books

@@ -69,7 +69,7 @@ fun SearchResultsView(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(bottom=12.dp)
+                                .padding(bottom = 12.dp)
                                 .clickable {
                                     navHostController.navigate(
                                         Screen.BookDetailsScreen.route + "/isbn/${foundBook.getISBN()}"
@@ -82,11 +82,12 @@ fun SearchResultsView(
                         ) {
                             Row {
                                 Image(
-                                    painter = rememberAsyncImagePainter(model = foundBook.coverUrl),
+                                    painter = foundBook.getCoverPainter(),
                                     contentDescription="cover of the book",
                                     contentScale = ContentScale.Fit,
                                     modifier = Modifier
                                         .width(80.dp)
+                                        .height(100.dp)
                                         .padding(8.dp)
                                 )
                                 Column {

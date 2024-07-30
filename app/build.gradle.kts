@@ -9,6 +9,12 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        buildConfigField(
+            "String",
+            "GOOGLE_API_KEY",
+            "${project.findProperty("GOOGLE_API_KEY")}"
+        )
+
         applicationId = "com.example.booki"
         minSdk = 24
         targetSdk = 34
@@ -39,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

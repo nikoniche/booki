@@ -1,4 +1,4 @@
-package com.example.booki.book_search.apis.openLibraryAPI
+package com.example.booki.book_search.apis.openLibrary
 
 import com.example.booki.Book
 import kotlinx.coroutines.coroutineScope
