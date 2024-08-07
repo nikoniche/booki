@@ -82,7 +82,7 @@ sealed class Status(
     val color: Color,
 ) {
     data object PlanToRead : Status(id=0, "Plan to read", Color.Gray)
-    data object Reading : Status(id=1, "Reading", Color.Yellow)
+    data object Reading : Status(id=1, "Reading", Color.Cyan)
     data object Finished : Status(id=2, "Finished", Color.Green)
     data object Dropped : Status(id=3, "Dropped", Color.Red)
 }

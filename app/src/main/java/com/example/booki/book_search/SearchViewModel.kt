@@ -52,9 +52,10 @@ class SearchViewModel: ViewModel() {
                         OpenLibrary.getBookByISBN(queryAsIsbnString)
                     )
 
-                    extendResultsList(
-                        GoogleBooks.getBookByISBN(queryAsIsbnString)
-                    )
+                    // disabled search from google books since they would charge
+//                    extendResultsList(
+//                        GoogleBooks.getBookByISBN(queryAsIsbnString)
+//                    )
 
                     // search user books
                     val userBooks = userBookRepository.getUserBooks()

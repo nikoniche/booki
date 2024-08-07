@@ -23,7 +23,7 @@ object Graph {
                 klass = BookiDatabase::class.java,
                 name = "personal_books.db",
             )
-                .fallbackToDestructiveMigration() // delete before production -> resetting DB on schema change
+//                .fallbackToDestructiveMigration() // delete before production -> resetting DB on schema change
                 .build()
             println("database provided")
         } catch (e: SQLiteException) {

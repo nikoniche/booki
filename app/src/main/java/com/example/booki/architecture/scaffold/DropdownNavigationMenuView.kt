@@ -57,12 +57,12 @@ fun DropdownNavigationMenu(
             scaffoldViewModel.menuOpened.value = false
             navHostController.navigate(Screen.PersonalBooksScreen.route)
         }
-        NavigationItem(
-            name ="Reading statistics",
-            iconDrawable = R.drawable.ic_graph_outlined
-        ) {
-            scaffoldViewModel.menuOpened.value = false
-        }
+//        NavigationItem(
+//            name ="Reading statistics",
+//            iconDrawable = R.drawable.ic_graph_outlined
+//        ) {
+//            scaffoldViewModel.menuOpened.value = false
+//        }
         NavigationItem(
             name ="Books created by me",
             iconDrawable = R.drawable.ic_library_add
@@ -70,12 +70,12 @@ fun DropdownNavigationMenu(
             scaffoldViewModel.menuOpened.value = false
             navHostController.navigate(Screen.BooksCreatedByMeScreen.route)
         }
-        NavigationItem(
-            name ="Settings",
-            iconDrawable = R.drawable.ic_settings
-        ) {
-            scaffoldViewModel.menuOpened.value = false
-        }
+//        NavigationItem(
+//            name ="Settings",
+//            iconDrawable = R.drawable.ic_settings
+//        ) {
+//            scaffoldViewModel.menuOpened.value = false
+//        }
     }
 }
 

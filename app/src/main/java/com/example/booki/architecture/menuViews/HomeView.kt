@@ -42,13 +42,13 @@ fun HomeView(
     searchViewModel: SearchViewModel,
 ) {
     MyAppColumn {
-        ReadInLast("Books read this year", 27)
-        Spacer(Modifier.height(6.dp))
-        ReadInLast("Books read this month", 1)
+//        ReadInLast("Books read this year", 27)
+//        Spacer(Modifier.height(6.dp))
+//        ReadInLast("Books read this month", 1)
 
-        Spacer(Modifier.height(12.dp))
-        MyDivider()
-        Spacer(Modifier.height(12.dp))
+//        Spacer(Modifier.height(12.dp))
+//        MyDivider()
+//        Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),

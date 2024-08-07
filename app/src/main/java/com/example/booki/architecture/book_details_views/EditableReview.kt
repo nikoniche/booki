@@ -153,7 +153,7 @@ fun EditableRating(
                 }
         ) {
             icon()
-            Text(order.toString())
+//            Text(order.toString())
         }
     }
 

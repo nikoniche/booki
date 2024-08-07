@@ -88,7 +88,7 @@ fun SearchResultsView(
                                     modifier = Modifier
                                         .width(80.dp)
                                         .height(100.dp)
-                                        .padding(8.dp)
+//                                        .padding(8.dp)
                                 )
                                 Column {
                                     Text(
