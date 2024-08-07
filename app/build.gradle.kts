@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.booki"
+    namespace = "com.nikoniche.booki"
     compileSdk = 34
 
     defaultConfig {
@@ -15,7 +15,7 @@ android {
             "${project.findProperty("GOOGLE_API_KEY")}"
         )
 
-        applicationId = "com.booki"
+        applicationId = "com.nikoniche.booki"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
