@@ -8,7 +8,7 @@ class HeaderInterceptor : Interceptor {
         val originalRequest = chain.request()
         val requestWithHeaders = originalRequest.newBuilder()
             .header("App-Name", "Booki")
-            .header("Email", "robin.skaba@gmail.com")
+            .header("Email", "nikonichedevelopment@gmail.com")
             .build()
         return chain.proceed(requestWithHeaders)
     }
