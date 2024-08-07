@@ -254,7 +254,6 @@ fun AddBookManuallyView(
             true
         }
         val publishDateState = TextFieldState() {
-            // todo try to do some form of a date check, but otherwise field is optional
             true
         }
 
@@ -337,7 +336,7 @@ fun AddBookManuallyView(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text="you can set your reading data after you create the book",
+                text="you can set your reading progress after adding the book",
                 color=Color.DarkGray,
                 fontStyle= FontStyle.Italic,
                 fontSize=14.sp,
