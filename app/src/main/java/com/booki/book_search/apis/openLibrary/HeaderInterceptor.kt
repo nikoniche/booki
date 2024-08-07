@@ -7,8 +7,7 @@ class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestWithHeaders = originalRequest.newBuilder()
-            .header("App-Name", "Booki")
-            .header("Email", "nikonichedevelopment@gmail.com")
+            .header("User-Agent", "Booki/1.0 (nikonichedevelopment@gmail.com)")
             .build()
         return chain.proceed(requestWithHeaders)
     }
