@@ -27,43 +27,51 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.booki.PersonalBook
+import com.example.booki.Status
 import com.example.booki.personalData.PersonalRecordsViewModel
 
 @Composable
 fun EditableReadPages(
-    personalBook: PersonalBook,
     personalRecordsViewModel: PersonalRecordsViewModel
 ) {
-    var pageProgressState by remember {
-        mutableStateOf(personalBook.readPages.toString())
-    }
+    val trackedBook: PersonalBook = personalRecordsViewModel.viewedPersonalBook.value!!
 
-    BasicTextField(
-        singleLine=true,
-        textStyle = TextStyle(
-            textAlign= TextAlign.End,
-            fontSize = 16.sp,
-        ),
-        modifier= Modifier
-            .width(30.dp)
-            .offset(y = 1.dp),
-        value = pageProgressState,
-        onValueChange = {
-            pageProgressState = it
-            val formattedPages = pageProgressState.toIntOrNull()
-            if (formattedPages != null) {
-                personalBook.readPages = formattedPages
-                personalRecordsViewModel.updateBook(personalBook)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+    ) {
+        BasicTextField(
+            singleLine=true,
+            textStyle = TextStyle(
+                textAlign= TextAlign.End,
+                fontSize = 16.sp,
+            ),
+            modifier= Modifier
+                .width(40.dp)
+                .offset(y=0.75.dp)
+                .padding(end=2.dp),
+            value = trackedBook.readPages.toString(),
+            onValueChange = {
+                val formattedPages = it.toIntOrNull()
+                if (formattedPages != null) {
+                    trackedBook.readPages = formattedPages
+                    if (trackedBook.readPages == trackedBook.book.numberOfPages) {
+                        trackedBook.status = Status.Finished
+                    }
+                    personalRecordsViewModel.updateBook(trackedBook)
+                }
             }
-        }
-    )
+        )
 
-    Text(
-        text = "/${personalBook.book.numberOfPages}",
-        color = Color.Black,
-        fontSize = 16.sp
-    )
+        Text(
+            text = "/ ${personalRecordsViewModel.viewedPersonalBook.value!!.book.numberOfPages}",
+            color = Color.Black,
+            fontSize = 16.sp,
+            modifier = Modifier
+        )
+    }
 }

@@ -51,6 +51,7 @@ class PersonalRecordsViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             personalBookRepository.updatePersonalBook(personalBook)
             refreshBooks()
+//            viewedPersonalBook.value = personalBook
         }
     }
     fun removeBook(

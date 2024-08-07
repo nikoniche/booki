@@ -3,6 +3,7 @@ package com.example.booki.architecture.book_details_views
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -129,7 +130,10 @@ fun BookView(
                     }
 
                     DropdownMenu(
-                        modifier = Modifier.wrapContentWidth(),
+                        modifier = Modifier
+                            .background(Color.White)
+                            .border(1.dp, Color.Black)
+                            .wrapContentWidth(),
                         expanded = dropDownMenuExpandedState,
                         onDismissRequest = {
                             dropDownMenuExpandedState = false
@@ -155,6 +159,9 @@ fun BookView(
                                             )
                                             else -> personalRecordsViewModel.viewedPersonalBook.value!!.status = status
                                         }
+                                        if (status == Status.Finished) {
+                                            personalRecordsViewModel.viewedPersonalBook.value!!.readPages = personalRecordsViewModel.viewedPersonalBook.value!!.book.numberOfPages
+                                        }
                                         personalRecordsViewModel.updateBook(personalRecordsViewModel.viewedPersonalBook.value!!)
                                     }
                                     bookStatusState = status
@@ -172,7 +179,6 @@ fun BookView(
                 if (personalRecordsViewModel.viewedPersonalBook.value != null) {
                     if (bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                         EditableReadPages(
-                            personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
                             personalRecordsViewModel = personalRecordsViewModel,
                         )
                     }
