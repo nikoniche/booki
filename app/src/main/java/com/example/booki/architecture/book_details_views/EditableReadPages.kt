@@ -39,6 +39,9 @@ fun EditableReadPages(
     personalRecordsViewModel: PersonalRecordsViewModel
 ) {
     val trackedBook: PersonalBook = personalRecordsViewModel.viewedPersonalBook.value!!
+    var writtenPages by remember {
+        mutableStateOf(trackedBook.readPages.toString())
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -54,15 +57,18 @@ fun EditableReadPages(
                 .width(40.dp)
                 .offset(y=0.75.dp)
                 .padding(end=2.dp),
-            value = trackedBook.readPages.toString(),
+            value = writtenPages,
             onValueChange = {
+                writtenPages = it
                 val formattedPages = it.toIntOrNull()
                 if (formattedPages != null) {
-                    trackedBook.readPages = formattedPages
-                    if (trackedBook.readPages == trackedBook.book.numberOfPages) {
-                        trackedBook.status = Status.Finished
+                    if (formattedPages <= trackedBook.book.numberOfPages) {
+                        trackedBook.readPages = formattedPages
+                        if (trackedBook.readPages == trackedBook.book.numberOfPages) {
+                            trackedBook.status = Status.Finished
+                        }
+                        personalRecordsViewModel.updateBook(trackedBook)
                     }
-                    personalRecordsViewModel.updateBook(trackedBook)
                 }
             }
         )
