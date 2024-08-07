@@ -4,7 +4,10 @@ import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.example.booki.architecture.book_details_views.createImageLoader
 import com.google.gson.Gson
 
 class Book(
@@ -54,15 +57,21 @@ class Book(
 
     @Composable
     fun getCoverPainter(): Painter {
-        return if (this.coverUrl == "") {
-            rememberAsyncImagePainter(model = "https://lgimages.s3.amazonaws.com/nc-md.gif")
+        val context = LocalContext.current
+        val imageLoader = createImageLoader(context)
+
+        val imageUrl = if (coverUrl.isEmpty()) {
+            "https://lgimages.s3.amazonaws.com/nc-md.gif"
         } else {
-            if (this.source == "User") {
-                rememberAsyncImagePainter(model = Uri.parse(this.coverUrl))
-            } else {
-                rememberAsyncImagePainter(model = this.coverUrl)
-            }
+            coverUrl
         }
+
+        return rememberAsyncImagePainter(
+            model = ImageRequest.Builder(context)
+                .data(if (source == "User") Uri.parse(imageUrl) else imageUrl)
+                .build(),
+            imageLoader = imageLoader
+        )
     }
 }
 
