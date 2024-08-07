@@ -50,6 +50,7 @@ import com.booki.architecture.navigation.Screen
 import com.booki.book_search.UserBookViewModel
 import com.booki.personalData.PersonalRecordsViewModel
 import com.booki.Book
+import com.booki.PersonalBook
 import com.booki.Status
 
 @Composable
@@ -128,7 +129,7 @@ fun BookView(
                             dropDownMenuExpandedState = false
                         }) {
                         @Composable
-                        fun BookStatusSelection(status: com.booki.Status) {
+                        fun BookStatusSelection(status: Status) {
                             DropdownMenuItem(
                                 text = {
                                     Text(status.inText, color=status.color)
@@ -136,7 +137,7 @@ fun BookView(
                                 onClick = {
                                     if (personalRecordsViewModel.viewedPersonalBook.value == null) {
                                         personalRecordsViewModel.addBook(
-                                            com.booki.PersonalBook(
+                                            PersonalBook(
                                                 book = book,
                                                 status = status, // assuming we arent trying to delete non-existent book
                                                 readPages = if (status == Status.Finished) book.numberOfPages else 0
@@ -167,7 +168,7 @@ fun BookView(
                 }
 
                 if (personalRecordsViewModel.viewedPersonalBook.value != null) {
-                    if (bookStatusState == com.booki.Status.Reading || bookStatusState == com.booki.Status.Finished || bookStatusState == com.booki.Status.Dropped) {
+                    if (bookStatusState == Status.Reading || bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                         EditableReadPages(
                             personalRecordsViewModel = personalRecordsViewModel,
                         )
@@ -213,14 +214,14 @@ fun BookView(
             }
 
             if (personalRecordsViewModel.viewedPersonalBook.value != null) {
-                if(bookStatusState == com.booki.Status.Finished || bookStatusState == com.booki.Status.Dropped) {
+                if(bookStatusState == Status.Finished || bookStatusState == Status.Dropped) {
                     EditableReview(
                         personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
                         personalRecordsViewModel = personalRecordsViewModel
                     )
                 }
 
-                if(bookStatusState == com.booki.Status.Reading || bookStatusState == com.booki.Status.Finished) {
+                if(bookStatusState == Status.Reading || bookStatusState == Status.Finished) {
                     Spacer(Modifier.height(12.dp))
                     EditableBookNotes(
                         personalBook = personalRecordsViewModel.viewedPersonalBook.value!!,
@@ -234,7 +235,7 @@ fun BookView(
 
 @Composable
 fun GenericBookData(
-    book: com.booki.Book,
+    book: Book,
 ) {
     // universal slash public book data
     Column(
@@ -321,7 +322,7 @@ fun GenericBookData(
 @Preview(showBackground=true)
 @Composable
 fun GenericBookDataPreview() {
-    GenericBookData(book = com.booki.Book(
+    GenericBookData(book = Book(
         title = "Testing title",
         authors = listOf("Kafka", "Orwell"),
         subtitle = "THERE is but one truly serious philosophical problem and that is the queistion of suicide",

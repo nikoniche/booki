@@ -29,7 +29,7 @@ import com.booki.personalData.PersonalRecordsViewModel
 fun EditableReadPages(
     personalRecordsViewModel: PersonalRecordsViewModel
 ) {
-    val trackedBook: com.booki.PersonalBook = personalRecordsViewModel.viewedPersonalBook.value!!
+    val trackedBook: PersonalBook = personalRecordsViewModel.viewedPersonalBook.value!!
     val writtenPages = remember {
         derivedStateOf {
             trackedBook.readPages
@@ -65,7 +65,7 @@ fun EditableReadPages(
                     if (formattedPages <= trackedBook.book.numberOfPages) {
                         trackedBook.readPages = formattedPages
                         if (trackedBook.readPages == trackedBook.book.numberOfPages) {
-                            trackedBook.status = com.booki.Status.Finished
+                            trackedBook.status = Status.Finished
                         }
                         personalRecordsViewModel.updateBook(trackedBook)
                     }

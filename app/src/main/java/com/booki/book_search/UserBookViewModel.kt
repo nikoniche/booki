@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 class UserBookViewModel: ViewModel() {
     private val userBookRepository = Graph.userBookRepository
 
-    private val _userBooks: MutableState<List<com.booki.Book>> = mutableStateOf(emptyList())
-    val userBooks: State<List<com.booki.Book>> = _userBooks
+    private val _userBooks: MutableState<List<Book>> = mutableStateOf(emptyList())
+    val userBooks: State<List<Book>> = _userBooks
 
-    private val _userBookToEdit: MutableState<com.booki.Book?> = mutableStateOf(null)
-    val userBookToEdit: State<com.booki.Book?> = _userBookToEdit
+    private val _userBookToEdit: MutableState<Book?> = mutableStateOf(null)
+    val userBookToEdit: State<Book?> = _userBookToEdit
 
     private fun fetchSavedBooks() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,28 +38,28 @@ class UserBookViewModel: ViewModel() {
         fetchSavedBooks()
     }
 
-    fun addBook(book: com.booki.Book) {
+    fun addBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.addUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun updateBook(book: com.booki.Book) {
+    fun updateBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.updateUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun deleteBook(book: com.booki.Book) {
+    fun deleteBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.deleteUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun triggerBookEdit(userBook: com.booki.Book) {
+    fun triggerBookEdit(userBook: Book) {
         _userBookToEdit.value = userBook
     }
 }

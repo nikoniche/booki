@@ -5,21 +5,21 @@ import kotlinx.coroutines.coroutineScope
 
 object OpenLibrary {
 
-    suspend fun getBookByISBN(isbn: String): List<com.booki.Book> = coroutineScope {
+    suspend fun getBookByISBN(isbn: String): List<Book> = coroutineScope {
         try {
             val response = OpenLibraryClient.openLibraryService.getBookByISBN(isbn)
             if (!response.isSuccessful) {
                 println("Error: ${response.code()} - ${response.message()}")
-                return@coroutineScope emptyList<com.booki.Book>()
+                return@coroutineScope emptyList<Book>()
             }
 
             val search = response.body()
             if (search?.records == null) {
                 println("No result found.")
-                return@coroutineScope emptyList<com.booki.Book>()
+                return@coroutineScope emptyList<Book>()
             }
 
-            val bookResults: List<com.booki.Book> = search.records.map { entry ->
+            val bookResults: List<Book> = search.records.map { entry ->
                 println(entry.value.data.title)
                 val bookData = entry.value.data
 
@@ -28,7 +28,7 @@ object OpenLibrary {
                 val coverUrl = bookData.cover?.large ?: ""
                 val subtitle = bookData.excerpts?.firstOrNull()?.text ?: ""
 
-                com.booki.Book(
+                Book(
                     title = bookData.title,
                     authors = bookData.authors.map { it.name },
                     numberOfPages = bookData.number_of_pages,
@@ -46,7 +46,7 @@ object OpenLibrary {
             return@coroutineScope bookResults
         } catch (e: Exception) {
 
-            return@coroutineScope emptyList<com.booki.Book>()
+            return@coroutineScope emptyList<Book>()
         }
     }
 }

@@ -8,14 +8,14 @@ import retrofit2.await
 object GoogleBooks {
     private val apiKey = BuildConfig.GOOGLE_API_KEY
 
-    suspend fun getBookByISBN(isbn: String): List<com.booki.Book> = coroutineScope {
+    suspend fun getBookByISBN(isbn: String): List<Book> = coroutineScope {
         try {
             val response = GoogleBooksClient.googleBooksService.getBookByISBN("isbn:$isbn", apiKey)
             val search = response.await()
-            val bookResults: List<com.booki.Book> = search.items.map {
+            val bookResults: List<Book> = search.items.map {
                 val bookData = it.volumeInfo
 
-                com.booki.Book(
+                Book(
                     title = bookData.title,
                     authors = bookData.authors,
                     description = bookData.description ?: "",
@@ -32,7 +32,7 @@ object GoogleBooks {
             return@coroutineScope bookResults
         } catch (e: Exception) {
             println("GOOGLE BOOKS EXCEPTIONS: ${e.message}")
-            return@coroutineScope emptyList<com.booki.Book>()
+            return@coroutineScope emptyList<Book>()
         }
     }
 }

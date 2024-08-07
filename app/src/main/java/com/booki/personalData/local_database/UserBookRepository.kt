@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.first
 class UserBookRepository(
     private val userBookDao: UserBookDao
 ) {
-    private fun convertBookToUserBookEntity(book: com.booki.Book): UserBookEntity {
+    private fun convertBookToUserBookEntity(book: Book): UserBookEntity {
         return if (book.id == -1L) {
             UserBookEntity(
                 bookString = Gson().toJson(book),
@@ -20,16 +20,16 @@ class UserBookRepository(
             )
         }
     }
-    suspend fun addUserBook(book: com.booki.Book){
+    suspend fun addUserBook(book: Book){
         userBookDao.addUserBook(convertBookToUserBookEntity(book))
         println("saving ${book.title} w ${book.coverUrl}")
     }
 
-    suspend fun getUserBooks(): List<com.booki.Book> {
+    suspend fun getUserBooks(): List<Book> {
         val userBookEntities = userBookDao.getAllUserBooks().first()
         return userBookEntities.map {
             entity ->
-            val newBook = Gson().fromJson(entity.bookString, com.booki.Book::class.java)
+            val newBook = Gson().fromJson(entity.bookString, Book::class.java)
             newBook.id = entity.id
             println("loaded ${newBook.title} w ${newBook.coverUrl}")
             newBook
@@ -40,11 +40,11 @@ class UserBookRepository(
         return userBookDao.getUserBookById(id)
     }
 
-    suspend fun updateUserBook(book: com.booki.Book) {
+    suspend fun updateUserBook(book: Book) {
         userBookDao.updateUserBook(convertBookToUserBookEntity(book))
     }
 
-    suspend fun deleteUserBook(book: com.booki.Book) {
+    suspend fun deleteUserBook(book: Book) {
         userBookDao.deleteUserBook(convertBookToUserBookEntity(book))
     }
 }

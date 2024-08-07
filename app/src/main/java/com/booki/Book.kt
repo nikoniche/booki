@@ -77,8 +77,8 @@ class Book(
 
 data class PersonalBook(
     val id: Long=-1L,
-    val book: com.booki.Book,
-    var status: com.booki.Status = com.booki.Status.PlanToRead,
+    val book: Book,
+    var status: Status = Status.PlanToRead,
     var readPages: Int=0,
     var rating: Int=1, // 1-10 / 2 na 5 hvezdicek
     var review: String="",
@@ -90,8 +90,8 @@ sealed class Status(
     val inText: String,
     val color: Color,
 ) {
-    data object PlanToRead : com.booki.Status(id=0, "Plan to read", Color.Gray)
-    data object Reading : com.booki.Status(id=1, "Reading", Color.Cyan)
-    data object Finished : com.booki.Status(id=2, "Finished", Color.Green)
-    data object Dropped : com.booki.Status(id=3, "Dropped", Color.Red)
+    data object PlanToRead : Status(id=0, "Plan to read", Color.Gray)
+    data object Reading : Status(id=1, "Reading", Color.Cyan)
+    data object Finished : Status(id=2, "Finished", Color.Green)
+    data object Dropped : Status(id=3, "Dropped", Color.Red)
 }

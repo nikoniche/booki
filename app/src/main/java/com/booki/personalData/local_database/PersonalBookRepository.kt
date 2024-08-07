@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.first
 class PersonalBookRepository(
     private val personalBookDao: PersonalBookDao
 ) {
-    private fun convertPersonalBookToEntity(personalBook: com.booki.PersonalBook): PersonalBookEntity {
+    private fun convertPersonalBookToEntity(personalBook: PersonalBook): PersonalBookEntity {
         var personalBookEntity = PersonalBookEntity(
             bookString=personalBook.book.textify(),
             statusId=personalBook.status.id,
@@ -32,22 +32,22 @@ class PersonalBookRepository(
         return personalBookEntity
     }
 
-    suspend fun addPersonalBook(personalBook: com.booki.PersonalBook){
+    suspend fun addPersonalBook(personalBook: PersonalBook){
         personalBookDao.addPersonalBook(convertPersonalBookToEntity(personalBook))
     }
 
-    suspend fun getPersonalBooks(): List<com.booki.PersonalBook> {
+    suspend fun getPersonalBooks(): List<PersonalBook> {
         val personalBookEntities = personalBookDao.getAllPersonalBooks().first()
         return personalBookEntities.map { entity ->
-            com.booki.PersonalBook(
+            PersonalBook(
                 id = entity.id,
-                book = Gson().fromJson(entity.bookString, com.booki.Book::class.java),
+                book = Gson().fromJson(entity.bookString, Book::class.java),
                 status = when (entity.statusId) {
-                    0 -> com.booki.Status.PlanToRead
-                    1 -> com.booki.Status.Reading
-                    2 -> com.booki.Status.Finished
-                    3 -> com.booki.Status.Dropped
-                    else -> com.booki.Status.PlanToRead
+                    0 -> Status.PlanToRead
+                    1 -> Status.Reading
+                    2 -> Status.Finished
+                    3 -> Status.Dropped
+                    else -> Status.PlanToRead
                 },
                 readPages = entity.pageProgress,
                 rating = entity.rating,
@@ -61,11 +61,11 @@ class PersonalBookRepository(
         return personalBookDao.getPersonalBookById(id)
     }
 
-    suspend fun updatePersonalBook(personalBook: com.booki.PersonalBook) {
+    suspend fun updatePersonalBook(personalBook: PersonalBook) {
         personalBookDao.updatePersonalBook(convertPersonalBookToEntity(personalBook))
     }
 
-    suspend fun deletePersonalBook(personalBook: com.booki.PersonalBook) {
+    suspend fun deletePersonalBook(personalBook: PersonalBook) {
         personalBookDao.deletePersonalBook(convertPersonalBookToEntity(personalBook))
     }
 }

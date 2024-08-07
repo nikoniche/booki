@@ -33,7 +33,7 @@ fun PersonalBooksView(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         RowOfBooks(
-            status = com.booki.Status.Reading,
+            status = Status.Reading,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -44,7 +44,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.booki.Status.Finished,
+            status = Status.Finished,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -55,7 +55,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.booki.Status.PlanToRead,
+            status = Status.PlanToRead,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -66,7 +66,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.booki.Status.Dropped,
+            status = Status.Dropped,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -76,7 +76,7 @@ fun PersonalBooksView(
 
 @Composable
 fun RowOfBooks(
-    status: com.booki.Status,
+    status: Status,
     navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
     searchViewModel: SearchViewModel,
@@ -90,25 +90,24 @@ fun RowOfBooks(
             items(books) {
                     personalBook ->
                 when (status) {
-                    com.booki.Status.PlanToRead -> PersonalBookCard(
+                    Status.PlanToRead -> PersonalBookCard(
+                        personalBook = personalBook,
+                        navHostController=navHostController,
+                        searchViewModel = searchViewModel,
+                    )
+                    Status.Reading -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
                         navHostController=navHostController,
                         searchViewModel = searchViewModel,
                     )
-                    com.booki.Status.Reading -> PersonalBookCard(
-                        personalBook = personalBook,
-                        showPageProgress = true,
-                        navHostController=navHostController,
-                        searchViewModel = searchViewModel,
-                    )
-                    com.booki.Status.Finished -> PersonalBookCard(
+                    Status.Finished -> PersonalBookCard(
                         personalBook = personalBook,
                         showRating = true,
                         navHostController=navHostController,
                         searchViewModel = searchViewModel,
                     )
-                    com.booki.Status.Dropped -> PersonalBookCard(
+                    Status.Dropped -> PersonalBookCard(
                         personalBook = personalBook,
                         showPageProgress = true,
                         showRating = true,
