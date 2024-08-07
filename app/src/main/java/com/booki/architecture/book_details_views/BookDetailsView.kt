@@ -26,7 +26,7 @@ fun BookDetailsView(
     searchViewModel: SearchViewModel,
 ) {
     if(!searchViewModel.search.value.searching) {
-        var foundBook: com.booki.Book? = null
+        var foundBook: Book? = null
         searchViewModel.search.value.result.forEach {
             book ->
             if(book.getISBN() == bookIsbn) {
@@ -35,7 +35,7 @@ fun BookDetailsView(
         }
         if(foundBook != null) {
             BookView(
-                book=foundBook as com.booki.Book,
+                book=foundBook as Book,
                 personalRecordsViewModel=personalRecordsViewModel,
                 navHostController = navHostController,
                 userBookViewModel=userBookViewModel,

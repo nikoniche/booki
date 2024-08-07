@@ -49,10 +49,12 @@ import com.booki.MyDivider
 import com.booki.architecture.navigation.Screen
 import com.booki.book_search.UserBookViewModel
 import com.booki.personalData.PersonalRecordsViewModel
+import com.booki.Book
+import com.booki.Status
 
 @Composable
 fun BookView(
-    book: com.booki.Book,
+    book: Book,
     navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
     userBookViewModel: UserBookViewModel,
@@ -136,7 +138,8 @@ fun BookView(
                                         personalRecordsViewModel.addBook(
                                             com.booki.PersonalBook(
                                                 book = book,
-                                                status = status // assuming we arent trying to delete non-existent book
+                                                status = status, // assuming we arent trying to delete non-existent book
+                                                readPages = if (status == Status.Finished) book.numberOfPages else 0
                                             )
                                         )
                                     } else {
@@ -146,7 +149,7 @@ fun BookView(
                                             )
                                             else -> personalRecordsViewModel.viewedPersonalBook.value!!.status = status
                                         }
-                                        if (status == com.booki.Status.Finished) {
+                                        if (status == Status.Finished) {
                                             personalRecordsViewModel.viewedPersonalBook.value!!.readPages = personalRecordsViewModel.viewedPersonalBook.value!!.book.numberOfPages
                                         }
                                         personalRecordsViewModel.updateBook(personalRecordsViewModel.viewedPersonalBook.value!!)
@@ -156,10 +159,10 @@ fun BookView(
                                 }
                             )
                         }
-                        BookStatusSelection(com.booki.Status.PlanToRead)
-                        BookStatusSelection(com.booki.Status.Reading)
-                        BookStatusSelection(com.booki.Status.Finished)
-                        BookStatusSelection(com.booki.Status.Dropped)
+                        BookStatusSelection(Status.PlanToRead)
+                        BookStatusSelection(Status.Reading)
+                        BookStatusSelection(Status.Finished)
+                        BookStatusSelection(Status.Dropped)
                     }
                 }
 
