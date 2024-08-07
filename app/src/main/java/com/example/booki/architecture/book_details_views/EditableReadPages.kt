@@ -40,11 +40,6 @@ fun EditableReadPages(
     var pageProgressState by remember {
         mutableStateOf(personalBook.readPages.toString())
     }
-    var valueChanged by remember {
-        mutableStateOf(false)
-    }
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
 
     BasicTextField(
         singleLine=true,
@@ -54,12 +49,15 @@ fun EditableReadPages(
         ),
         modifier= Modifier
             .width(30.dp)
-            .offset(y = 1.dp)
-            .focusRequester(focusRequester),
+            .offset(y = 1.dp),
         value = pageProgressState,
         onValueChange = {
             pageProgressState = it
-            valueChanged = true
+            val formattedPages = pageProgressState.toIntOrNull()
+            if (formattedPages != null) {
+                personalBook.readPages = formattedPages
+                personalRecordsViewModel.updateBook(personalBook)
+            }
         }
     )
 
@@ -68,38 +66,4 @@ fun EditableReadPages(
         color = Color.Black,
         fontSize = 16.sp
     )
-
-    if (valueChanged) {
-        Button(
-            colors = ButtonDefaults
-                .buttonColors(
-                    containerColor= Color.White,
-                    contentColor= Color.Black
-                ),
-            border = BorderStroke(2.5.dp, Color.Green),
-            modifier = Modifier
-                .height(30.dp)
-                .padding(horizontal = 12.dp),
-            shape = ButtonDefaults.filledTonalShape,
-            contentPadding = PaddingValues(horizontal=10.dp, vertical=1.dp),
-            onClick={
-                personalBook.readPages = pageProgressState.toInt()
-                personalRecordsViewModel.updateBook(personalBook)
-                println("new pages: ${personalBook.readPages}")
-                focusManager.clearFocus()
-                valueChanged = false
-            }
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .wrapContentWidth(),
-            ) {
-
-            }
-            Text("Save", color= Color.Green, fontSize=16.sp)
-        }
-    }
 }
