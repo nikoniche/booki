@@ -33,7 +33,7 @@ class PersonalRecordsViewModel: ViewModel() {
             // check if viewedPersonalBook still exists
             var foundViewedBook = false
             _books.value.forEach {
-                if (it.equals(viewedPersonalBook.value)) foundViewedBook = true
+                if (it == viewedPersonalBook.value) foundViewedBook = true
             }
             if (!foundViewedBook) {
                 viewedPersonalBook.value = null

@@ -119,12 +119,12 @@ fun EditableRating(
                 ),
                 modifier= Modifier
                     .width(25.dp)
-                    .offset(y=1.25.dp)
+                    .offset(y=1.dp)
                     .padding(end=2.dp),
                 value = writtenRating,
                 onValueChange = {
                     writtenRating = it
-                    val formattedRating = it.toIntOrNull()
+                    val formattedRating = writtenRating.toIntOrNull()
                     if (formattedRating != null) {
                         if (formattedRating in 1..10) {
                             newRating = formattedRating

@@ -15,6 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +41,17 @@ fun EditableReadPages(
     personalRecordsViewModel: PersonalRecordsViewModel
 ) {
     val trackedBook: PersonalBook = personalRecordsViewModel.viewedPersonalBook.value!!
-    var writtenPages by remember {
-        mutableStateOf(trackedBook.readPages.toString())
+    val writtenPages = remember {
+        derivedStateOf {
+            trackedBook.readPages
+        }
+    }
+    var userInput by remember {
+        mutableStateOf(writtenPages.value.toString())
+    }
+
+    LaunchedEffect(trackedBook.readPages) {
+        userInput = trackedBook.readPages.toString()
     }
 
     Row(
@@ -57,9 +68,9 @@ fun EditableReadPages(
                 .width(40.dp)
                 .offset(y=0.75.dp)
                 .padding(end=2.dp),
-            value = writtenPages,
+            value = userInput,
             onValueChange = {
-                writtenPages = it
+                userInput = it
                 val formattedPages = it.toIntOrNull()
                 if (formattedPages != null) {
                     if (formattedPages <= trackedBook.book.numberOfPages) {
