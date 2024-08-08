@@ -33,7 +33,7 @@ fun PersonalBooksView(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         RowOfBooks(
-            status = com.nikoniche.booki.Status.Reading,
+            status = Status.Reading,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -44,7 +44,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.nikoniche.booki.Status.Finished,
+            status = Status.Finished,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -55,7 +55,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.nikoniche.booki.Status.PlanToRead,
+            status = Status.PlanToRead,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -66,7 +66,7 @@ fun PersonalBooksView(
         Spacer(Modifier.height(8.dp))
 
         RowOfBooks(
-            status = com.nikoniche.booki.Status.Dropped,
+            status = Status.Dropped,
             navHostController=navHostController,
             personalRecordsViewModel=personalRecordsViewModel,
             searchViewModel = searchViewModel,
@@ -76,7 +76,7 @@ fun PersonalBooksView(
 
 @Composable
 fun RowOfBooks(
-    status: com.nikoniche.booki.Status,
+    status: Status,
     navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
     searchViewModel: SearchViewModel,
@@ -84,7 +84,7 @@ fun RowOfBooks(
     MyHeadline(text = status.inText)
     Spacer(Modifier.height(8.dp))
 
-    val books: List<com.nikoniche.booki.PersonalBook> = personalRecordsViewModel.getBooks(status)
+    val books: List<PersonalBook> = personalRecordsViewModel.getBooks(status)
     if (books.isNotEmpty()) {
         LazyRow {
             items(books) {

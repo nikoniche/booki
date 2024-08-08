@@ -9,27 +9,29 @@ import com.nikoniche.booki.Book
 import com.nikoniche.booki.personalData.local_database.Graph
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserBookViewModel: ViewModel() {
     private val userBookRepository = Graph.userBookRepository
 
-    private val _userBooks: MutableState<List<com.nikoniche.booki.Book>> = mutableStateOf(emptyList())
-    val userBooks: State<List<com.nikoniche.booki.Book>> = _userBooks
+    private val _userBooks: MutableState<List<Book>> = mutableStateOf(emptyList())
+    val userBooks: State<List<Book>> = _userBooks
 
-    private val _userBookToEdit: MutableState<com.nikoniche.booki.Book?> = mutableStateOf(null)
-    val userBookToEdit: State<com.nikoniche.booki.Book?> = _userBookToEdit
+    private val _userBookToEdit: MutableState<Book?> = mutableStateOf(null)
+    val userBookToEdit: State<Book?> = _userBookToEdit
 
     private fun fetchSavedBooks() {
         viewModelScope.launch(Dispatchers.IO) {
-            _userBooks.value = userBookRepository.getUserBooks()
+            val fetchedBooks = userBookRepository.getUserBooks()
 
-            // check if userBookToEdit still exists
-            var foundEditBook = false
-            _userBooks.value.forEach {
-                if (it == _userBookToEdit.value) foundEditBook = true
-            }
-            if (!foundEditBook) {
-                _userBookToEdit.value = null
+            withContext(Dispatchers.Main) {
+                _userBooks.value = fetchedBooks
+
+                // Check if userBookToEdit still exists
+                val foundEditBook = fetchedBooks.any { it == _userBookToEdit.value }
+                if (!foundEditBook) {
+                    _userBookToEdit.value = null
+                }
             }
         }
     }
@@ -38,28 +40,28 @@ class UserBookViewModel: ViewModel() {
         fetchSavedBooks()
     }
 
-    fun addBook(book: com.nikoniche.booki.Book) {
+    fun addBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.addUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun updateBook(book: com.nikoniche.booki.Book) {
+    fun updateBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.updateUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun deleteBook(book: com.nikoniche.booki.Book) {
+    fun deleteBook(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
             userBookRepository.deleteUserBook(book)
             fetchSavedBooks()
         }
     }
 
-    fun triggerBookEdit(userBook: com.nikoniche.booki.Book) {
+    fun triggerBookEdit(userBook: Book) {
         _userBookToEdit.value = userBook
     }
 }

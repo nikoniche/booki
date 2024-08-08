@@ -55,7 +55,7 @@ import com.nikoniche.booki.Status
 
 @Composable
 fun BookView(
-    book: com.nikoniche.booki.Book,
+    book: Book,
     navHostController: NavHostController,
     personalRecordsViewModel: PersonalRecordsViewModel,
     userBookViewModel: UserBookViewModel,

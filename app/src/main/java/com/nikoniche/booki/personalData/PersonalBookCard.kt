@@ -33,7 +33,7 @@ import com.nikoniche.booki.book_search.SearchViewModel
 
 @Composable
 fun PersonalBookCard(
-    personalBook: com.nikoniche.booki.PersonalBook,
+    personalBook: PersonalBook,
     showPageProgress: Boolean=false,
     showReadingStatus: Boolean=false,
     showRating: Boolean=false,
@@ -109,7 +109,7 @@ fun PersonalBookCard(
 }
 
 @Composable
-fun StarRating(personalBook: com.nikoniche.booki.PersonalBook, starSize: Dp =16.dp) {
+fun StarRating(personalBook: PersonalBook, starSize: Dp =16.dp) {
     val amountOfFullStars: Int = personalBook.rating.div(2)
     val halfStar: Int = personalBook.rating.mod(2)
 

@@ -392,7 +392,7 @@ fun AddBookManuallyView(
                             if (userBookViewModel.userBookToEdit.value == null) -1L
                             else userBookViewModel.userBookToEdit.value!!.id
 
-                        val userBook = com.nikoniche.booki.Book(
+                        val userBook = Book(
                             id = id,
                             title = titleState.writtenState.value,
                             subtitle = subtitleState.writtenState.value,

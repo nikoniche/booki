@@ -114,7 +114,7 @@ fun BookiTopBar(
                         }
                     )
 
-                    val barcodeScanner = com.nikoniche.booki.BarcodeScanner(LocalContext.current)
+                    val barcodeScanner = BarcodeScanner(LocalContext.current)
                     Row {
                         if(searchQuery.isNotEmpty()) {
                             IconButton(

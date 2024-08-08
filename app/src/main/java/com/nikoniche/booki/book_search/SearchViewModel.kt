@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel: ViewModel() {
     data class Search(
         var searching: Boolean = true,
-        var result: MutableList<com.nikoniche.booki.Book> = mutableListOf(),
+        var result: MutableList<Book> = mutableListOf(),
         var error: String="",
     )
 
@@ -22,7 +22,7 @@ class SearchViewModel: ViewModel() {
     private val _search = mutableStateOf(Search())
     val search: State<Search> = _search
 
-    private fun extendResultsList(listToAdd: List<com.nikoniche.booki.Book>) {
+    private fun extendResultsList(listToAdd: List<Book>) {
         val extendedList = _search.value.result
         extendedList.addAll(listToAdd)
         _search.value = _search.value.copy(
@@ -59,7 +59,7 @@ class SearchViewModel: ViewModel() {
                     // search user books
                     val userBooks = userBookRepository.getUserBooks()
 
-                    val matchingUserBooks: MutableList<com.nikoniche.booki.Book> = mutableListOf()
+                    val matchingUserBooks: MutableList<Book> = mutableListOf()
                     userBooks.forEach {
                         if (it.getISBN() == queryAsIsbnString) {
                             matchingUserBooks.add(it)
@@ -84,7 +84,7 @@ class SearchViewModel: ViewModel() {
         }
     }
 
-    fun fetchUserBook(userBook: com.nikoniche.booki.Book) {
+    fun fetchUserBook(userBook: Book) {
         _search.value = Search()
         _search.value = _search.value.copy(
             result=mutableListOf(userBook),

@@ -12,14 +12,15 @@ import com.nikoniche.booki.personalData.local_database.Graph
 import com.nikoniche.booki.personalData.local_database.PersonalBookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PersonalRecordsViewModel: ViewModel() {
     private val personalBookRepository: PersonalBookRepository = Graph.personalBookRepository
 
-    private val _books: MutableState<List<com.nikoniche.booki.PersonalBook>> = mutableStateOf( emptyList() )
-    val books: State<List<com.nikoniche.booki.PersonalBook>> = _books
+    private val _books: MutableState<List<PersonalBook>> = mutableStateOf(emptyList())
+    val books: State<List<PersonalBook>> = _books
 
-    val viewedPersonalBook: MutableState<com.nikoniche.booki.PersonalBook?> = mutableStateOf(null)
+    val viewedPersonalBook: MutableState<PersonalBook?> = mutableStateOf(null)
 
     init {
         refreshBooks()
@@ -28,26 +29,27 @@ class PersonalRecordsViewModel: ViewModel() {
     private fun refreshBooks() {
         viewModelScope.launch(Dispatchers.IO) {
             val listOfSavedBooks = personalBookRepository.getPersonalBooks()
-            _books.value = listOfSavedBooks
 
-            // check if viewedPersonalBook still exists
-            var foundViewedBook = false
-            _books.value.forEach {
-                if (it == viewedPersonalBook.value) foundViewedBook = true
-            }
-            if (!foundViewedBook) {
-                viewedPersonalBook.value = null
+            withContext(Dispatchers.Main) {
+                _books.value = listOfSavedBooks
+
+                // Check if viewedPersonalBook still exists
+                val foundViewedBook = listOfSavedBooks.any { it == viewedPersonalBook.value }
+                if (!foundViewedBook) {
+                    viewedPersonalBook.value = null
+                }
             }
         }
     }
 
-    fun addBook(personalBook: com.nikoniche.booki.PersonalBook) {
+
+    fun addBook(personalBook: PersonalBook) {
         viewModelScope.launch(Dispatchers.IO) {
             personalBookRepository.addPersonalBook(personalBook)
             refreshBooks()
         }
     }
-    fun updateBook(personalBook: com.nikoniche.booki.PersonalBook) {
+    fun updateBook(personalBook: PersonalBook) {
         viewModelScope.launch(Dispatchers.IO) {
             personalBookRepository.updatePersonalBook(personalBook)
             refreshBooks()
@@ -55,7 +57,7 @@ class PersonalRecordsViewModel: ViewModel() {
         }
     }
     fun removeBook(
-        personalBook: com.nikoniche.booki.PersonalBook
+        personalBook: PersonalBook
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             personalBookRepository.deletePersonalBook(personalBook)
@@ -63,7 +65,7 @@ class PersonalRecordsViewModel: ViewModel() {
         }
     }
 
-    fun setViewedBookByBook(book: com.nikoniche.booki.Book) {
+    fun setViewedBookByBook(book: Book) {
         var hasBook = false
         _books.value.forEach {
             personalBook ->
@@ -75,11 +77,11 @@ class PersonalRecordsViewModel: ViewModel() {
         if (!hasBook) viewedPersonalBook.value = null
     }
 
-    fun getBooks(status: com.nikoniche.booki.Status?=null): List<com.nikoniche.booki.PersonalBook> {
+    fun getBooks(status: Status?=null): List<PersonalBook> {
         // null status to allow for getting books of all types
         return if (status == null) _books.value
         else {
-            val matchingBooks: MutableList<com.nikoniche.booki.PersonalBook> = mutableListOf()
+            val matchingBooks: MutableList<PersonalBook> = mutableListOf()
             _books.value.forEach {
                     book ->
                 if (book.status == status) matchingBooks.add(book)
