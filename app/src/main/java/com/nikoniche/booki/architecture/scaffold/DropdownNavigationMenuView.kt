@@ -88,7 +88,7 @@ fun NavigationItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp)
+            .height(48.dp)
             .border(1.dp, Color.Black)
             .clickable {
                 onClick()
@@ -101,12 +101,12 @@ fun NavigationItem(
             contentDescription = name,
             modifier = Modifier
                 .padding(8.dp)
-                .size(20.dp)
+                .size(25.dp)
             ,
         )
         Text(
             text=name,
-            fontSize=16.sp,
+            fontSize=18.sp,
             fontWeight= FontWeight.Normal,
             textAlign = TextAlign.Start,
             modifier=Modifier.fillMaxWidth(),

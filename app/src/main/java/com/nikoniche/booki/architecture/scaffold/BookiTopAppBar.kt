@@ -162,7 +162,7 @@ fun BookiTopBar(
             ) {
                 Icon(
                     painter= painterResource(id = R.drawable.ic_menu),
-                    contentDescription = "browse button",
+                    contentDescription = "browse",
                     tint=Color.White,
                     modifier = Modifier.size(35.dp)
                 )
