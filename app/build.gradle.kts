@@ -69,12 +69,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // NAVIGATION
-        val nav_version = "2.7.7"
-        // Kotlin
-        implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-        implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-        // Jetpack Compose Integration
-        implementation("androidx.navigation:navigation-compose:$nav_version")
+    val nav_version = "2.7.7"
+    // Kotlin
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    // Jetpack Compose Integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // IMAGES
     implementation("com.google.accompanist:accompanist-drawablepainter:0.28.0")
